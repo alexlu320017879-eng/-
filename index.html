@@ -13,7 +13,7 @@ svg{width:24px;height:24px;stroke:currentColor;fill:none;stroke-width:1.8;stroke
 .top .sp{flex:1}
 .dd{display:flex;align-items:center;gap:6px;border:0;background:none;color:var(--ink);font:inherit;cursor:pointer;padding:8px 2px;min-height:44px}
 .dd::after{content:"";border:4px solid transparent;border-right-color:var(--mute);border-bottom-color:var(--mute);margin-top:8px}
-.go{border:0;border-radius:6px;background:var(--blue);color:#fff;font:inherit;padding:10px 24px;cursor:pointer}
+.go{border:0;border-radius:6px;background:var(--blue);color:#fff;font:inherit;padding:10px 16px;cursor:pointer;white-space:nowrap;flex:none}
 .go:disabled{background:#d2d2d2;color:#fff}
 main{flex:1;overflow-y:auto;position:relative}
 .tabs{display:flex;background:var(--card);border-top:1px solid var(--line);padding-bottom:env(safe-area-inset-bottom,0px);flex:none}
@@ -151,6 +151,13 @@ main{flex:1;overflow-y:auto;position:relative}
 .pth{width:54px;height:54px;border-radius:6px;background:#dfe1e4;object-fit:cover;flex:none;display:grid;place-items:center;color:#fff;border:0;padding:0;cursor:pointer}
 .pth svg{width:26px;height:26px}
 .ln .th img{width:100%;height:100%;object-fit:cover;border-radius:4px}
+.foot{position:relative;z-index:6}.tabs{position:relative;z-index:7}
+.dim{position:fixed;left:50%;transform:translateX(-50%);width:100%;max-width:560px;top:56px;bottom:0;background:rgba(0,0,0,.5);z-index:5}
+.px{display:flex;align-items:center;gap:8px;min-height:68px;padding:0 14px;border-top:1px solid var(--line);font-size:22px;cursor:pointer}
+.px .pl{flex:none}.px .pv{flex:1;text-align:right;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}.px .mu{color:var(--mute)}
+.adjg{margin-left:auto;display:flex;border:2px solid var(--blue);border-radius:8px;overflow:hidden;width:min(58%,330px)}
+.adjg button{flex:1;border:0;background:none;color:var(--blue);font:inherit;font-size:22px;height:48px;min-width:0}.adjg button+button{border-left:2px solid var(--blue)}.adjg b{color:var(--ink);font-weight:500}
+.pbar{display:flex;border-top:1px solid var(--line)}.pbar button{flex:1;border:0;background:none;color:var(--red);font:inherit;font-size:22px;height:68px;display:flex;align-items:center;justify-content:center;gap:8px;cursor:pointer}.pbar button+button{border-left:1px solid var(--line)}.pbar svg{width:28px;height:28px}
 @media print{html,body{height:auto!important;overflow:visible!important;display:block!important;background:#fff!important}body>*:not(#pg2){display:none!important}#pg2 .pg{position:static!important;display:block!important;background:#fff!important;padding:0!important}#pg2 .noprint{display:none!important}#pg2 .fb{overflow:visible!important}.docp{box-shadow:none!important;margin:0!important}}
 </style></head><body>
 <div id="top"></div><main id="main"></main><div id="foot"></div>
@@ -189,7 +196,11 @@ const P=id=>PR.find(p=>p.id==id);
 function lines(){S.lo=S.lo||{};return Object.keys(S.cart).filter(k=>S.cart[k]>0&&P(k.split("|")[0])).map(k=>{const[id,c]=k.split("|");const p=P(id),o=S.lo[k]||{};const pr=o.pr!=null?o.pr:p.price,nm=o.n!=null?o.n:p.name;const cat=o.cat!=null?o.cat:(p.cat||"");return{k,p,c,cat,q:S.cart[k],pr,nm,amt:+(S.cart[k]*pr).toFixed(2)}})}
 const sub=()=>lines().reduce((a,l)=>a+l.amt,0);
 const units=()=>lines().reduce((a,l)=>a+l.q,0);
-const tot=()=>sub()*(S.tax?1.21:1);
+const adj=()=>sub()*(S.adjP||0)/100+(S.adjA||0);
+const vat=()=>S.tax?(sub()+adj())*.21:0;
+const shp=()=>(S.ship&&S.ship.fee)||0;
+const tot=()=>+(sub()+adj()+vat()+shp()).toFixed(2);
+const net=()=>+(tot()-(S.rnd||0)).toFixed(2);
 function toast(t){const e=document.createElement("div");e.className="toast";e.textContent=t;document.body.appendChild(e);setTimeout(()=>e.remove(),1400)}
 function sheet(h,opts,ex,cancel){$("ov").innerHTML=`<div class="sheet" onclick="if(event.target==this)cl()"><div>${h?`<h3>${h}</h3>`:""}${opts}${ex||""}<button class="opt c" onclick="cl()">${cancel||"取消"}</button></div></div>`}
 function cl(){$("ov").innerHTML=""}
@@ -215,11 +226,28 @@ function render(keep){persist();
     $("top").innerHTML=`<div class="srch" style="width:100%"><button onclick="openSearch()" style="text-align:left">${I.search}搜索货号</button><button onclick="listAll()">${I.grid}商品列表</button></div>`;
     m.innerHTML="";
   }else if(S.tab=="e"){
-    $("top").innerHTML=`<button class="dd" onclick="sheet('单据类型',['销售单','报价单','退货单'].map(x=>'<button class=opt onclick=&quot;S.doc=\\''+x+'\\';cl();render()&quot;>'+x+'</button>').join(''))">${I.folder}${S.doc}</button><button class="dd" onclick="clientMenu()">${I.user}${S.client}</button><span class="sp"></span><button class="go" ${units()?"":"disabled"} onclick="cashier()">下单${units()?"("+units()+")":""}</button>`;
+    $("top").innerHTML=`<div class="top" style="width:100%;padding:0 10px;gap:6px"><button class="dd" onclick="sheet('单据类型',['销售单','报价单','退货单'].map(x=>'<button class=opt onclick=&quot;S.doc=\\''+x+'\\';cl();render()&quot;>'+x+'</button>').join(''))">${I.folder}${S.doc}</button><button class="dd" onclick="clientMenu()">${I.user}${S.client}</button><span class="sp"></span><button class="go" ${units()?"":"disabled"} onclick="cashier()">下单${units()?"("+units()+")":""}</button></div>`;
     const L=lines();
     m.innerHTML=L.length?cartHtml(L):
      `<div class="empty"><p>购物车是空的，可用以下方式添加商品</p><button onclick="openSearch()">搜索</button><button onclick="scanIt()">扫码录货</button><button onclick="listAll()">商品列表</button></div>`;
-    $("foot").innerHTML=`<div class="foot"><div class="det ${S.open?'open':''}"><div><span>小计</span><span>${f2(sub())}</span></div><div><span>税 21%</span><span>${f2(S.tax?sub()*.21:0)}</span></div></div><div class="r"><button class="ico" aria-label="展开明细" onclick="S.open=!S.open;render(1)" style="transform:rotate(${S.open?180:0}deg)"><svg viewBox="0 0 24 24"><path d="M6 15l6-6 6 6"/></svg></button><button class="tax ${S.tax?'':'off'}" onclick="S.tax=!S.tax;render(1)">TAX+21.00%</button><div class="cnt"><svg viewBox="0 0 24 24" width="22"><circle cx="12" cy="12" r="9" fill="currentColor" stroke="none"/><path d="M12 8v8M8 12h8" stroke="#fff"/></svg>${units()}</div><div class="cnt"><svg viewBox="0 0 24 24" width="22"><circle cx="12" cy="12" r="9" fill="currentColor" stroke="none"/><path d="M8 12h8" stroke="#fff"/></svg>0</div><div class="tot">${f2(tot())}</div></div></div>`;
+    const CH2='<svg viewBox="0 0 24 24" width="22" style="color:var(--mute)"><path d="M9 5l7 7-7 7"/></svg>';
+    const cnts=`<div class="cnt"><svg viewBox="0 0 24 24" width="22"><circle cx="12" cy="12" r="9" fill="currentColor" stroke="none"/><path d="M12 8v8M8 12h8" stroke="#fff"/></svg>${units()}</div><div class="cnt"><svg viewBox="0 0 24 24" width="22"><circle cx="12" cy="12" r="9" fill="currentColor" stroke="none"/><path d="M8 12h8" stroke="#fff"/></svg>0</div><div class="tot">${f2(net())}</div>`;
+    const chev=`<button class="ico" aria-label="${S.open?'收起':'展开'}" onclick="S.open=!S.open;render(1)" style="transform:rotate(${S.open?180:0}deg)"><svg viewBox="0 0 24 24"><path d="M6 15l6-6 6 6"/></svg></button>`;
+    if(!S.open){
+      $("foot").innerHTML=`<div class="foot"><div class="r">${chev}<button class="tax ${S.tax?'':'off'}" onclick="S.tax=!S.tax;render(1)">TAX+21.00%</button>${cnts}</div></div>`;
+    }else{
+      const sh=S.ship?esc(S.ship.m)+" · "+f2(S.ship.fee):"先选择运输方式";
+      const px=(l,v,fn)=>`<div class="px" onclick="${fn}"><span class="pl">${l}</span><span class="pv">${v}</span>${CH2}</div>`;
+      m.innerHTML+=`<div class="dim" onclick="S.open=false;render(1)"></div>`;
+      $("foot").innerHTML=`<div class="foot"><div class="r">${chev}<span style="flex:1"></span>${cnts}</div>
+      <div class="px"><span class="pl">单据调价:</span><span class="adjg"><button onclick="adjPct()">${S.adjP?'<b>'+S.adjP+'%</b>':'%'}</button><button onclick="adjAmt()">${S.adjA?'<b>'+f2(S.adjA)+'</b>':''}</button></span></div>
+      ${px("运费:",`<span class="${S.ship?'':'mu'}">${sh}</span>`,"shipPick()")}
+      ${px("抹零:",`<span class="mu">${f2(S.rnd||0)}</span>`,"rndPick()")}
+      <div class="px"><span class="pl">税:<button class="tax ${S.tax?'':'off'}" style="margin-left:8px;font-size:18px" onclick="S.tax=!S.tax;render(1)">TAX+21.00%</button></span><span class="pv mu" style="margin-right:36px">${f2(vat())}</span></div>
+      ${px("备注:",`<span class="mu">${esc((S.note||"").slice(0,14))}</span>`,"notePick()")}
+      ${px("标签:",`<span class="mu">${esc((S.tag||"").slice(0,14))}</span>`,"tagPick()")}
+      <div class="pbar"><button onclick="clearAll()"><svg viewBox="0 0 24 24"><path d="M5 7h14M10 7V4h4v3M7 7l1 13h8l1-13"/></svg>清空</button><button onclick="toast('已刷新');render(1)"><svg viewBox="0 0 24 24"><path d="M20 12a8 8 0 11-3-6.2M20 4v5h-5"/></svg>刷新</button><button onclick="previewOrder()"><svg viewBox="0 0 24 24"><path d="M7 9V4h10v5M6 17H4v-7h16v7h-2M7 14h10v6H7z"/></svg>预览</button></div></div>`;
+    }
   }else if(S.tab=="h"){
     $("top").innerHTML=`<div class="hl" style="width:100%;padding:0"><button class="ico" aria-label="菜单">${I.menu}</button>${S.find?`<input id="hi" class="t" style="border:0;background:none;outline:0;color:var(--ink);font:inherit;font-size:18px" placeholder="单号或客户" value="${S.hq}" oninput="S.hq=this.value;render(1)">`:'<div class="t">最近三个月|销售单</div>'}<button class="ico" aria-label="搜索" onclick="S.find=!S.find;S.hq='';render()">${I.search}</button></div>`;
     let o=S.orders.filter(x=>!S.hq||String(x.no).includes(S.hq)||x.cl.toLowerCase().includes(S.hq.toLowerCase()));
@@ -347,9 +375,9 @@ function setQty(k,id){
 
 
 let ND=null;
-function dlg(title,init,cb,num){
+function dlg(title,init,cb,num,neg){
   ND={cb,num,v:String(init==null?"":init),fresh:!!num};
-  const kp=num?`<div class="kp"><div class="hd" onclick="ndK('ok')"><svg viewBox="0 0 24 24" width="40"><path d="M4 9l8 6 8-6"/></svg></div><div class="kg">${[1,2,3,4,5,6,7,8,9].map(n=>`<button onclick="ndK('${n}')">${n}</button>`).join("")}<button disabled></button><button onclick="ndK('0')">0</button><button onclick="ndK('.')">.</button><button class="bs" aria-label="删除" onclick="ndK('<')"><svg viewBox="0 0 24 24" width="44"><path d="M9 6h11v12H9l-6-6z"/><path d="M12 9l5 6M17 9l-5 6"/></svg></button></div></div>`:"";
+  const kp=num?`<div class="kp"><div class="hd" onclick="ndK('ok')"><svg viewBox="0 0 24 24" width="40"><path d="M4 9l8 6 8-6"/></svg></div><div class="kg">${[1,2,3,4,5,6,7,8,9].map(n=>`<button onclick="ndK('${n}')">${n}</button>`).join("")}${neg?`<button onclick="ndK('±')">±</button>`:'<button disabled></button>'}<button onclick="ndK('0')">0</button><button onclick="ndK('.')">.</button><button class="bs" aria-label="删除" onclick="ndK('<')"><svg viewBox="0 0 24 24" width="44"><path d="M9 6h11v12H9l-6-6z"/><path d="M12 9l5 6M17 9l-5 6"/></svg></button></div></div>`:"";
   $("nd").innerHTML=`<div class="bd" onclick="ndX()"></div><div class="box"><h4>${esc(title)}</h4>${num?`<div id="ndv" class="val"></div>`:`<input id="ndi" class="val" value="${esc(ND.v)}" onkeydown="if(event.key=='Enter')ndK('ok')">`}<div class="ac"><button onclick="ndX()">取消</button><button onclick="ndK('ok')">确定</button></div></div>${kp}`;
   ndShow();if(!num){const i=$("ndi");i.focus();i.select()}
 }
@@ -357,6 +385,7 @@ function ndShow(){const e=$("ndv");if(e){e.textContent=ND.v;e.className="val"+(N
 function ndK(k){
   if(!ND)return;
   if(k=="ok"){const v=ND.num?ND.v:$("ndi").value,cb=ND.cb;$("nd").innerHTML="";ND=null;cb(v);return}
+  if(k=="±"){ND.fresh=false;ND.v=ND.v.startsWith("-")?ND.v.slice(1):"-"+ND.v;ndShow();return}
   if(k=="<"){ND.v=ND.fresh?"":ND.v.slice(0,-1);ND.fresh=false}
   else{if(ND.fresh){ND.v="";ND.fresh=false}if(k=="."&&ND.v.includes("."))return;if(ND.v=="0"&&k!=".")ND.v="";ND.v+=k}
   ndShow();
@@ -387,7 +416,7 @@ function photoMenu(has,cb,delcb,view){
 function readPhoto(inp){
   const f=inp.files&&inp.files[0];if(!f||!PHC){cl();return}cl();
   const cb=PHC;const url=URL.createObjectURL(f),im=new Image();
-  im.onload=()=>{const m=420,r=Math.min(1,m/Math.max(im.width,im.height)),c=document.createElement("canvas");c.width=Math.round(im.width*r);c.height=Math.round(im.height*r);c.getContext("2d").drawImage(im,0,0,c.width,c.height);URL.revokeObjectURL(url);cb(c.toDataURL("image/jpeg",.65))};
+  im.onload=()=>{const m=1000,r=Math.min(1,m/Math.max(im.width,im.height)),c=document.createElement("canvas");c.width=Math.round(im.width*r);c.height=Math.round(im.height*r);c.getContext("2d").drawImage(im,0,0,c.width,c.height);URL.revokeObjectURL(url);cb(c.toDataURL("image/jpeg",.8))};
   im.onerror=()=>toast("无法读取这张图片");im.src=url;
 }
 
@@ -398,6 +427,23 @@ function prodPhoto(id){
 }
 function formPhoto(){photoMenu(!!F.photo,d=>{F.photo=d;fRender()},"()=>{F.photo='';fRender()}",F.photo?"fBig()":"")}
 function fBig(){sheet("",`<img src="${F.photo}" alt="" style="width:100%;display:block">`,"","关闭")}
+S.shm=["快递","物流","自提"];
+function adjPct(){dlg("调价百分比（例：-10 = 打九折）",S.adjP||"",n=>{S.adjP=numOf(n)||0;render(1)},1,1)}
+function adjAmt(){dlg("调价金额（例：-5 = 减5）",S.adjA||"",n=>{S.adjA=numOf(n)||0;render(1)},1,1)}
+function rndPick(){dlg("抹零",S.rnd||"",n=>{S.rnd=numOf(n)||0;render(1)},1,1)}
+function notePick(){dlg("备注",S.note||"",n=>{S.note=n.trim().slice(0,250);render(1)})}
+function tagPick(){dlg("标签",S.tag||"",n=>{S.tag=n.trim().slice(0,60);render(1)})}
+function shipPick(){
+  sheet("运输方式",S.shm.map((m,i)=>`<button class="opt" onclick="shipSel(${i})">${esc(m)}</button>`).join("")+`<button class="opt" onclick="cl();dlg('添加运输方式','',n=>{n=n.trim();if(n&&!S.shm.includes(n))S.shm.push(n);persist();shipPick()})">＋ 添加运输方式…</button>`+(S.ship?`<button class="opt" style="color:var(--red)" onclick="S.ship=null;cl();render(1)">取消运费</button>`:""));
+}
+function shipSel(i){const m=S.shm[i];cl();dlg("运费 · "+m,S.ship&&S.ship.m==m?S.ship.fee:"",n=>{S.ship={m,fee:Math.max(0,numOf(n)||0)};render(1)},1)}
+function clearAll(){sheet("清空这一单的所有商品和调整？",`<button class="opt" style="color:var(--red)" onclick="clearDo()">确认清空</button>`)}
+function clearDo(){S.cart={};S.lo={};S.fold={};S.adjP=S.adjA=0;S.ship=null;S.rnd=0;S.note=S.tag="";S.open=false;cl();render(1)}
+function previewOrder(){
+  if(!units()){toast("购物车是空的");return}
+  const o={no:S.seq,cl:S.client,u:units(),d:new Date().toLocaleDateString("en-GB").slice(0,5),dt:new Date().toLocaleString("zh-CN"),a:net(),tax:S.tax,doc:S.doc,round:S.rnd||0,sub:+sub().toFixed(2),adj:+adj().toFixed(2),vat:+vat().toFixed(2),ship:S.ship,note:S.note,tag:S.tag,pay:[],owed:net(),L:lines().map(l=>({id:l.p.id,n:l.nm,cat:l.cat,c:l.c,q:l.q,pr:l.pr,amt:l.amt}))};
+  $("pg2").innerHTML=`<div class="pg"><div class="top noprint" style="padding:0 8px"><button class="ico" style="color:var(--ink)" aria-label="返回" onclick="$('pg2').innerHTML=''">${BACK}</button><div style="flex:1;text-align:center;font-size:19px">订单预览</div><button class="go" style="background:#4a6cf7;padding:12px 18px" onclick="doPrint()">打印</button></div><div class="fb"><div class="docp">${docBody(o,"订单")}</div></div></div>`;
+}
 const PM=["Bank","Cash","CONTRA REMBOLSO"];
 let K=null;
 const SVG={
@@ -440,7 +486,7 @@ const kPaid=()=>PM.reduce((a,m)=>a+(K.pay[m]||0),0);
 const kDue=()=>+(tot()-K.round-kPaid()).toFixed(2);
 function cashier(){
   if(!units()){toast("购物车是空的");return}
-  K={pay:{},round:0};kRender();
+  K={pay:{},round:S.rnd||0};kRender();
 }
 function kRender(){
   const due=kDue();
@@ -457,12 +503,12 @@ function kDone(){
   if(due<-0.005){toast("付款金额超过订单金额");return}
   
   const o={no:S.seq++,cl:S.client,u:units(),d:new Date().toLocaleDateString("en-GB").slice(0,5),dt:new Date().toLocaleString("zh-CN"),
-    a:+(tot()-K.round).toFixed(2),tax:S.tax,doc:S.doc,round:K.round,sub:+sub().toFixed(2),vat:S.tax?+(sub()*.21).toFixed(2):0,
+    a:+(tot()-K.round).toFixed(2),tax:S.tax,doc:S.doc,round:K.round,sub:+sub().toFixed(2),adj:+adj().toFixed(2),ship:S.ship,note:S.note,tag:S.tag,vat:+vat().toFixed(2),
     pay:PM.filter(m=>K.pay[m]).map(m=>[m,K.pay[m]]),owed:due>0.005?due:0,
     L:lines().map(l=>({id:l.p.id,n:l.nm,cat:l.cat,c:l.c,q:l.q,pr:l.pr,amt:l.amt}))};
   S.orders.unshift(o);
   if(S.doc!="报价单"){const sg=S.doc=="退货单"?1:-1;lines().forEach(l=>{const v=l.p.v.find(x=>x[0]==l.c);if(v)v[1]+=sg*l.q})}
-  S.cart={};S.lo={};S.open=false;S.fold={};
+  S.cart={};S.lo={};S.open=false;S.fold={};S.adjP=S.adjA=0;S.ship=null;S.rnd=0;S.note=S.tag="";
   persist();okRender(o.no);render(1);
 }
 function okRender(no){
@@ -476,11 +522,11 @@ const mny=n=>f2(+n||0);
 function docBody(o,t){
   const L=o.L||[],cust=o.cl=="Client tmp"?"散客":o.cl;
   const tbl=(cols,rows)=>`<table class="dt"><tr>${cols.map(c=>`<th>${c}</th>`).join("")}</tr>${rows.map(r=>`<tr>${r.map(c=>`<td>${c}</td>`).join("")}</tr>`).join("")}</table>`;
-  const head=`<div style="display:flex;justify-content:space-between"><b style="font-size:20px">示例公司</b><span>${esc(o.dt||o.d)}</span></div><div style="font-size:22px;font-weight:700;margin:10px 0 2px">${t} #${o.no}</div><div>客户：${esc(cust)}</div>`;
+  const head=`<div style="display:flex;justify-content:space-between"><b style="font-size:20px">示例公司</b><span>${esc(o.dt||o.d)}</span></div><div style="font-size:22px;font-weight:700;margin:10px 0 2px">${t} #${o.no}</div><div>客户：${esc(cust)}</div>${o.tag?`<div>标签：${esc(o.tag)}</div>`:""}${o.note?`<div>备注：${esc(o.note)}</div>`:""}`;
   const items=tbl(["商品","数量","单价","金额"],L.map(l=>[esc(l.n)+"<br><small>"+(l.cat?esc(l.cat)+" · ":"")+esc(l.c)+"</small>",l.q,mny(l.pr),mny(l.amt)]));
   const paid=(o.pay||[]).reduce((a,p)=>a+p[1],0);
   let b;
-  if(t=="订单")b=items+`<div class="tt">小计 ${mny(o.sub!=null?o.sub:o.a)}<br>税 21% ${mny(o.vat)}<br>抹零 ${mny(o.round)}<br><b style="font-size:18px">合计 ${mny(o.a)}</b><br>已付 ${mny(paid)}<br>欠款 ${mny(o.owed)}</div>`;
+  if(t=="订单")b=items+`<div class="tt">小计 ${mny(o.sub!=null?o.sub:o.a)}<br>${o.adj?"调价 "+mny(o.adj)+"<br>":""}${o.ship?"运费 "+mny(o.ship.fee)+" ("+esc(o.ship.m)+")<br>":""}税 21% ${mny(o.vat)}<br>抹零 ${mny(o.round)}<br><b style="font-size:18px">合计 ${mny(o.a)}</b><br>已付 ${mny(paid)}<br>欠款 ${mny(o.owed)}</div>`;
   else if(t=="发票")b=items+`<div class="tt">税基 ${mny(o.sub!=null?o.sub:o.a)}<br>增值税 21% ${mny(o.vat)}<br><b style="font-size:18px">发票合计 ${mny(o.a)}</b></div>`;
   else if(t=="配货单")b=tbl(["货号","商品 / 颜色","数量","已拣"],L.map(l=>[esc(l.id||""),esc(l.n)+" "+esc(l.c),l.q,"☐"]))+`<div class="tt">共 ${o.u} 件</div>`;
   else b=tbl(["商品","数量"],L.map(l=>[esc(l.n)+" "+esc(l.c),l.q]))+`<div>总件数：<b>${o.u}</b></div><div style="margin-top:14px">收货地址：________________________</div><div style="margin-top:14px">承运：________________________</div><div style="margin-top:14px">备注：________________________</div><div style="margin-top:34px">签收：________________________</div>`;
@@ -615,8 +661,8 @@ function importData(inp){
   r.readAsText(f);
 }
 var KEY="kaidanbao_v1";
-function persist(){try{localStorage.setItem(KEY,JSON.stringify({PR:PR.map(p=>{const q={...p};delete q.photo;return q}),CU,orders:S.orders,seq:S.seq,client:S.client,cart:S.cart,lo:S.lo,CATS}))}catch(e){if(!window._pw){window._pw=1;toast("存储空间已满，新数据可能没保存")}}}
+function persist(){try{localStorage.setItem(KEY,JSON.stringify({PR:PR.map(p=>{const q={...p};delete q.photo;return q}),CU,orders:S.orders,seq:S.seq,client:S.client,cart:S.cart,lo:S.lo,CATS,X:{adjP:S.adjP,adjA:S.adjA,ship:S.ship,rnd:S.rnd,note:S.note,tag:S.tag,shm:S.shm}}))}catch(e){if(!window._pw){window._pw=1;toast("存储空间已满，新数据可能没保存")}}}
 function resetAll(){sheet("清除所有商品、客户、订单和库存数据？",'<button class="opt" style="color:var(--red)" onclick="try{localStorage.removeItem(KEY)}catch(e){}try{indexedDB.deleteDatabase(\'kdb_photos\')}catch(e){}setTimeout(()=>location.reload(),300)">确认清除</button>')}
-try{const d=JSON.parse(localStorage.getItem(KEY)||"null");if(d){if(d.PR){PR.splice(0,PR.length,...d.PR);PR.forEach(p=>{if(p.photo)phSave(p.id,p.photo)})}if(d.CU)CU.splice(0,CU.length,...d.CU);S.orders=d.orders||[];S.seq=d.seq||S.seq;if(d.client)S.client=d.client;if(d.cart)S.cart=d.cart;if(d.lo)S.lo=d.lo;if(d.CATS)CATS=d.CATS}}catch(e){}
+try{const d=JSON.parse(localStorage.getItem(KEY)||"null");if(d){if(d.PR){PR.splice(0,PR.length,...d.PR);PR.forEach(p=>{if(p.photo)phSave(p.id,p.photo)})}if(d.CU)CU.splice(0,CU.length,...d.CU);S.orders=d.orders||[];S.seq=d.seq||S.seq;if(d.client)S.client=d.client;if(d.cart)S.cart=d.cart;if(d.lo)S.lo=d.lo;if(d.CATS)CATS=d.CATS;if(d.X)Object.assign(S,d.X)}}catch(e){}
 render();phLoad();
 </script><script>if("serviceWorker" in navigator&&location.protocol=="https:"){addEventListener("load",()=>navigator.serviceWorker.register("sw.js").catch(()=>{}))}</script></body></html>
