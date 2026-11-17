@@ -1,0 +1,622 @@
+<!DOCTYPE html>
+<html lang="zh"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>开单宝</title><link rel="manifest" href="manifest.webmanifest"><meta name="theme-color" content="#4a7be0"><link rel="icon" href="icon-192.png"><link rel="apple-touch-icon" href="icon-192.png"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-capable" content="yes">
+<style>
+:root{--bg:#fafafa;--card:#fff;--ink:#222;--mute:#8a8a8a;--line:#e6e6e6;--blue:#4a7be0;--lblue:#dbe7f8;--red:#e8405f;--bar:#f3f3f3;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#141414;--card:#1d1d1d;--ink:#eee;--mute:#9a9a9a;--line:#333;--blue:#6d98f2;--lblue:#27354f;--bar:#232323}}
+*{box-sizing:inherit;-webkit-tap-highlight-color:transparent}
+html,body{height:100%;margin:0}
+body{background:var(--bg);color:var(--ink);font:16px/1.4 -apple-system,"PingFang SC","Noto Sans SC","Microsoft YaHei",sans-serif;max-width:560px;margin:0 auto;display:flex;flex-direction:column;overflow:hidden}
+svg{width:24px;height:24px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;flex:none}
+.top{display:flex;align-items:center;gap:10px;padding:0 14px;height:56px;background:var(--card);border-bottom:1px solid var(--line);flex:none}
+.top .sp{flex:1}
+.dd{display:flex;align-items:center;gap:6px;border:0;background:none;color:var(--ink);font:inherit;cursor:pointer;padding:8px 2px;min-height:44px}
+.dd::after{content:"";border:4px solid transparent;border-right-color:var(--mute);border-bottom-color:var(--mute);margin-top:8px}
+.go{border:0;border-radius:6px;background:var(--blue);color:#fff;font:inherit;padding:10px 24px;cursor:pointer}
+.go:disabled{background:#d2d2d2;color:#fff}
+main{flex:1;overflow-y:auto;position:relative}
+.tabs{display:flex;background:var(--card);border-top:1px solid var(--line);padding-bottom:env(safe-area-inset-bottom,0px);flex:none}
+.tabs button{flex:1;border:0;background:none;color:var(--mute);font:inherit;font-size:14px;padding:8px 0 6px;display:flex;flex-direction:column;align-items:center;gap:2px;cursor:pointer;min-height:56px}
+.tabs button.on{color:var(--blue)}
+.srch{display:flex;background:var(--card);height:64px;align-items:center}
+.srch>*{flex:1;display:flex;align-items:center;gap:10px;color:var(--mute);padding:0 14px;border:0;background:none;font:inherit;font-size:18px;height:40px}
+.srch>*+*{border-left:1px solid var(--line);cursor:pointer}
+.srch input{outline:0;color:var(--ink)}
+.empty{text-align:center;color:#666;padding-top:70px}
+.empty p{color:var(--mute)}
+.empty button{display:block;margin:18px auto;width:min(60%,290px);padding:13px;border:0;border-radius:4px;background:var(--lblue);color:var(--blue);font:inherit;box-shadow:0 1px 3px rgba(0,0,0,.2);cursor:pointer}
+.foot{background:var(--card);border-top:1px solid var(--line);flex:none}
+.foot .r{display:flex;align-items:center;gap:12px;padding:8px 14px;min-height:62px}
+.foot .tax{background:#9a9a9a;color:#fff;border:0;border-radius:3px;padding:4px 8px;font:inherit;font-size:20px}
+.foot .tax.off{background:var(--line);color:var(--mute)}
+.foot .cnt{display:flex;align-items:center;gap:4px;color:var(--mute);font-size:14px}
+.foot .tot{margin-left:auto;font-size:30px}
+.det{padding:6px 14px;font-size:14px;color:var(--mute);display:none}
+.det.open{display:block}
+.det div{display:flex;justify-content:space-between}
+.li{display:flex;align-items:center;gap:10px;padding:12px 14px;background:var(--card);border-bottom:1px solid var(--line)}
+.li .g{flex:1;min-width:0}
+.li .n{font-weight:600}.li .s{color:var(--mute);font-size:13px}
+.stp{display:flex;align-items:center;gap:2px}
+.stp button{width:44px;height:44px;border:0;border-radius:8px;background:var(--bar);color:var(--ink);font-size:22px;cursor:pointer}
+.stp b{min-width:34px;text-align:center;font-size:20px;font-weight:500}
+.hl{display:flex;align-items:center;gap:10px;padding:0 14px;height:56px;background:var(--bar);border-bottom:1px solid var(--line);flex:none}
+.hl .t{flex:1;font-size:19px}
+.ico{border:0;background:none;color:var(--mute);cursor:pointer;min-width:44px;min-height:44px;display:grid;place-items:center}
+.sortb{margin:4px 14px;border:0;width:calc(100% - 28px);background:var(--bar);text-align:center;padding:10px;font:inherit;color:var(--ink);border-radius:6px;cursor:pointer}
+.o{display:flex;gap:12px;padding:14px;border-bottom:1px solid var(--line);background:var(--card);position:relative;cursor:pointer}
+.stripe{width:14px;height:44px;background:linear-gradient(90deg,var(--red) 0 45%,var(--lblue) 45% 100%);flex:none;margin-top:6px}
+.o .g{flex:1;min-width:0}
+.o .no{color:var(--mute)}.o .cl{font-weight:700;font-size:18px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.o .addr{color:var(--mute);font-size:15px}
+.o .q{align-self:flex-end;font-weight:600;font-size:18px;min-width:34px;text-align:right}
+.o .rt{text-align:right}.o .rt .d{color:var(--mute)}.o .rt .a{font-weight:700;font-size:18px}
+.corner{position:absolute;right:0;top:0;width:0;height:0;border-top:30px solid #555;border-left:30px solid transparent}
+.ban{margin:14px;border-radius:12px;padding:16px;color:#fff;background:linear-gradient(120deg,#46707f,#62b0b3)}
+.ban b{display:block;font-size:18px;margin:6px 0}
+.sec{background:var(--bar);color:var(--mute);padding:14px;font-size:17px}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);background:var(--card)}
+.grid button{border:0;background:none;color:var(--ink);font:inherit;padding:16px 4px;display:flex;flex-direction:column;align-items:center;gap:8px;cursor:pointer;min-height:96px}
+.grid svg{width:34px;height:34px;color:#6f6f6f}
+.sheet{position:fixed;inset:0;background:rgba(0,0,0,.45);display:flex;align-items:flex-end;justify-content:center;z-index:9}
+.sheet>div{background:var(--card);width:100%;max-width:560px;border-radius:14px 14px 0 0;max-height:85%;overflow-y:auto;padding:8px 0 calc(8px + env(safe-area-inset-bottom,0px))}
+.sheet h3{margin:8px 14px;font-size:17px}
+.opt{display:block;width:100%;border:0;background:none;color:var(--blue);font:inherit;padding:14px;border-bottom:1px solid var(--line);cursor:pointer}
+.opt.c{color:var(--mute)}
+.toast{position:fixed;left:50%;bottom:90px;transform:translateX(-50%);background:#333;color:#fff;padding:8px 14px;border-radius:6px;z-index:10}
+.pill{display:inline-block;font-size:12px;border:1px solid var(--blue);color:var(--blue);border-radius:3px;padding:0 4px;margin-left:6px}
+.pg{position:fixed;inset:0;max-width:560px;margin:0 auto;background:var(--bg);z-index:8;display:flex;flex-direction:column;padding-top:env(safe-area-inset-top,0px)}
+.spb{flex:1;overflow-y:auto}
+.sqi{flex:1;border:0;border-left:1px solid var(--line);background:none;outline:0;font:inherit;font-size:24px;color:var(--ink);min-width:0;padding:0 10px;height:40px}
+.nf{text-align:center;padding:26px 14px;color:var(--mute);font-size:19px}
+.bb{border:0;background:#4a6cf7;color:#fff;border-radius:4px;padding:16px 22px;font:inherit;font-size:20px;cursor:pointer;margin:8px}
+.seg{display:flex;margin:6px 14px 10px;border:2px solid var(--ink);border-radius:8px;overflow:hidden;flex:none}
+.seg button{flex:1;border:0;background:var(--card);color:var(--ink);font:inherit;font-size:18px;padding:10px;cursor:pointer}
+.seg button.on{background:var(--ink);color:var(--card)}
+.fb{flex:1;overflow-y:auto}
+.rw{display:flex;align-items:center;gap:10px;padding:8px 14px;background:var(--card);border-bottom:1px solid var(--line);min-height:62px;font-size:19px}
+.rw .l{width:38%}
+.rw .l.w{flex:1;width:auto}
+.rw input.f{flex:1;min-width:0;border:0;background:var(--bar);border-radius:8px;padding:0 10px;font:inherit;color:var(--ink);outline:0;height:46px}
+.rw .v{flex:1;text-align:right;color:var(--mute)}
+.rw .v.k{color:var(--ink)}
+.gap{height:36px}
+.tg{position:relative;width:52px;height:32px;display:inline-block;flex:none}
+.tg input{position:absolute;inset:0;width:100%;height:100%;margin:0;opacity:0;cursor:pointer;z-index:1}
+.tg span{position:absolute;inset:0;background:#d9d9d9;border-radius:16px;transition:.15s}
+.tg span::after{content:"";position:absolute;left:2px;top:2px;width:28px;height:28px;border-radius:50%;background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.4);transition:.15s}
+.tg input:checked+span{background:var(--blue)}
+.tg input:checked+span::after{left:22px}
+.cbar{display:flex;align-items:center;background:var(--card);border-bottom:1px solid var(--line)}
+.cbar button{border:0;background:none;color:var(--blue);font:inherit;font-size:19px;padding:16px;cursor:pointer}
+.sbox{display:flex;align-items:center;gap:12px;margin:4px 14px 8px;background:var(--bar);border-radius:8px;padding:0 14px;height:46px;color:var(--mute);flex:none}
+.sbox input{flex:1;border:0;background:none;outline:0;font:inherit;font-size:19px;color:var(--ink);min-width:0}
+
+#pg2 .pg{z-index:8}
+.pg{padding-bottom:env(safe-area-inset-bottom,0px)}
+.sheet>.pop{width:min(300px,80%);max-width:none;margin:62px 0 0 15%;border-radius:4px;padding:6px 0;box-shadow:0 6px 24px rgba(0,0,0,.28);overflow:visible;max-height:none}
+.pm{display:flex;align-items:center;gap:14px;width:100%;border:0;background:none;color:var(--blue);font:inherit;font-size:19px;padding:16px;cursor:pointer;text-align:left}
+.pm svg{width:28px;height:28px}
+.rw textarea.f{flex:1;min-width:0;border:0;background:var(--bar);border-radius:8px;padding:10px;font:inherit;color:var(--ink);outline:0;height:110px;resize:none}
+.rw input.f.pre{flex:none;width:92px;text-align:center}
+.rw .u{color:var(--mute)}
+.tg.gr input:checked+span{background:#5fc56a}
+.tg.gr.lt input:checked+span{background:#a5e0b0}
+.cam{width:110px;height:110px;border:0;border-radius:10px;background:var(--bar);color:#777;display:grid;place-items:center;cursor:pointer}
+.cam svg{width:44px;height:44px}
+.bot{margin:0;border:0;border-radius:0;background:#3478f6;color:#fff;font:inherit;font-size:21px;padding:18px;width:100%;cursor:pointer;flex:none}
+
+.tabs button{position:relative}
+.badge{position:absolute;top:3px;left:54%;background:#e8405f;color:#fff;border-radius:14px;min-width:28px;padding:0 6px;font-size:15px;line-height:24px;text-align:center}
+.grp{display:flex;align-items:center;gap:10px;padding:2px 8px 2px 14px;background:var(--bar);color:var(--mute);font-size:19px;border-bottom:1px solid var(--line);cursor:pointer;min-height:48px}
+.grp svg{width:22px;height:22px}
+.ln{align-items:flex-start}
+.ln .qn{width:44px;text-align:center;color:var(--red);font-size:30px;line-height:1.1;cursor:pointer;flex:none}
+.ln .qn small{display:block;color:var(--ink);font-size:14px}
+.ln .th{width:62px;height:62px;border-radius:4px;background:#dfe1e4;color:#fff;display:grid;place-items:center;flex:none}
+.ln .th svg{width:34px;height:34px}
+.ln .stp{margin-top:6px}
+.ln .stp button{width:44px;height:36px;font-size:20px;margin-right:6px}
+.ln .lt{font-size:22px;align-self:center;flex:none}
+.sum{padding:22px 14px;font-size:19px}
+.sum>div{display:flex;justify-content:space-between;align-items:center;padding:5px 0}
+.okc{width:116px;height:116px;border:5px solid #72d1a3;border-radius:50%;margin:10px auto 0;display:grid;place-items:center;color:#72d1a3}
+.okc svg{width:60px;height:60px;stroke-width:3.2}
+.card{background:var(--bar);border-radius:8px;padding:14px 10px;font-size:18px}
+.cr{display:flex;gap:12px;padding:7px 0}
+.cr span{width:96px;text-align:right;color:var(--mute);flex:none}
+.ob{flex:1;border:1.5px solid var(--blue);background:var(--card);color:var(--blue);border-radius:4px;font:inherit;font-size:22px;padding:16px;cursor:pointer}
+.docp{background:#fff;color:#111;margin:12px;padding:18px;border-radius:6px;font-size:14px;line-height:1.5;box-shadow:0 1px 6px rgba(0,0,0,.15)}
+.dt{width:100%;border-collapse:collapse;margin:12px 0}
+.dt th,.dt td{border-bottom:1px solid #ddd;padding:6px 4px;text-align:right}
+.dt th:first-child,.dt td:first-child{text-align:left}
+.tt{text-align:right;line-height:1.8}
+
+#nd .bd{position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:20}
+#nd .box{position:fixed;left:50%;transform:translateX(-50%);top:max(56px,12vh);width:min(86%,500px);background:var(--card);border-radius:4px;padding:22px 20px 12px;z-index:21;box-shadow:0 6px 24px rgba(0,0,0,.35)}
+#nd .box h4{margin:0 0 18px 8px;font-size:22px;font-weight:400;color:var(--ink)}
+#nd .val{border-bottom:2px solid var(--blue);font-size:24px;padding:10px 0;min-height:48px;color:var(--ink)}
+#nd .val.ph{color:var(--mute)}
+#nd input.val{width:100%;border:0;border-bottom:2px solid var(--blue);background:none;outline:0;font:inherit;font-size:22px}
+#nd .ac{display:flex;justify-content:flex-end;gap:12px;margin-top:22px}
+#nd .ac button{border:0;background:none;color:var(--blue);font:inherit;font-size:19px;padding:12px 18px;cursor:pointer}
+#nd .kp{position:fixed;left:50%;transform:translateX(-50%);bottom:0;width:100%;max-width:560px;background:var(--card);z-index:22;padding-bottom:env(safe-area-inset-bottom,0px);border-top:1px solid var(--line)}
+#nd .kp .hd{height:min(54px,6.5vh);display:grid;place-items:center;color:var(--mute);border-bottom:1px solid var(--line)}
+#nd .kg{display:grid;grid-template-columns:1fr 1fr 1fr .9fr}
+#nd .kg button{border:0;border-right:1px solid var(--line);border-bottom:1px solid var(--line);background:var(--card);color:var(--ink);font:inherit;font-size:40px;font-weight:300;height:min(80px,9.5vh);cursor:pointer}
+#nd .kg button:active{background:var(--bar)}
+#nd .kg .bs{grid-column:4;grid-row:1/5;border:0;display:grid;place-items:center;font-size:24px}
+.fl{position:relative;overflow:hidden;text-align:center;cursor:pointer}.fl input{position:absolute;left:0;top:0;width:100%;height:100%;opacity:0;font-size:100px;cursor:pointer}
+.pth{width:54px;height:54px;border-radius:6px;background:#dfe1e4;object-fit:cover;flex:none;display:grid;place-items:center;color:#fff;border:0;padding:0;cursor:pointer}
+.pth svg{width:26px;height:26px}
+.ln .th img{width:100%;height:100%;object-fit:cover;border-radius:4px}
+@media print{html,body{height:auto!important;overflow:visible!important;display:block!important;background:#fff!important}body>*:not(#pg2){display:none!important}#pg2 .pg{position:static!important;display:block!important;background:#fff!important;padding:0!important}#pg2 .noprint{display:none!important}#pg2 .fb{overflow:visible!important}.docp{box-shadow:none!important;margin:0!important}}
+</style></head><body>
+<div id="top"></div><main id="main"></main><div id="foot"></div>
+<div class="tabs" id="tabs"></div><div id="pg"></div><div id="pg2"></div><div id="ov"></div><div id="nd"></div>
+<script>
+const I={
+ search:'<svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg>',
+ edit:'<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M8 16l1-4 6-6 3 3-6 6z"/></svg>',
+ list:'<svg viewBox="0 0 24 24"><path d="M9 6h11M9 12h11M9 18h11M4 6h.01M4 12h.01M4 18h.01"/></svg>',
+ more:'<svg viewBox="0 0 24 24"><circle cx="5" cy="12" r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="19" cy="12" r="1.5"/></svg>',
+ grid:'<svg viewBox="0 0 24 24" fill="currentColor"><rect x="3" y="3" width="8" height="8" rx="1"/><rect x="13" y="3" width="8" height="8" rx="1"/><rect x="3" y="13" width="8" height="8" rx="1"/><rect x="13" y="13" width="8" height="8" rx="1"/></svg>',
+ folder:'<svg viewBox="0 0 24 24"><path d="M3 7a2 2 0 012-2h4l2 2h8a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2z"/></svg>',
+ user:'<svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6"/></svg>',
+ scan:'<svg viewBox="0 0 24 24"><path d="M4 8V5a1 1 0 011-1h3M16 4h3a1 1 0 011 1v3M20 16v3a1 1 0 01-1 1h-3M8 20H5a1 1 0 01-1-1v-3M8 12h8"/></svg>',
+ menu:'<svg viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16"/></svg>',
+ tool:'<svg viewBox="0 0 24 24"><path d="M14 6a4 4 0 005 5l-9 9a2 2 0 01-3-3l9-9"/><path d="M5 5l4 4"/></svg>',
+ lock:'<svg viewBox="0 0 24 24"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 018 0v3"/></svg>',
+ sync:'<svg viewBox="0 0 24 24"><path d="M20 11a8 8 0 00-14-4M4 13a8 8 0 0014 4M6 3v4h4M18 21v-4h-4"/></svg>',
+ tag:'<svg viewBox="0 0 24 24"><path d="M3 12V4h8l10 10-8 8z"/><circle cx="8" cy="8" r="1.5"/></svg>',
+ card:'<svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M8 11h.01M13 10h5M13 14h5M6 16h4"/></svg>',
+ help:'<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M9.5 9.5a2.5 2.5 0 114 2c-1 .7-1.5 1.2-1.5 2.5M12 17h.01"/></svg>',
+ ver:'<svg viewBox="0 0 24 24"><path d="M4 6h16M4 10h16"/><rect x="4" y="13" width="16" height="7" rx="1"/></svg>',
+ net:'<svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="12" rx="1"/><path d="M12 16v4M8 20h8M10 9l-2 2 2 2M14 9l2 2-2 2"/></svg>'
+};
+const PR=[
+ {id:"JP02",name:"开衩半身裙",price:10.5,v:[["白/黑",13],["红白",9],["白/蓝",10],["白黄",9]]},
+ {id:"TS11",name:"基础款圆领T恤",price:6.8,v:[["白",40],["黑",32],["米色",25]]},
+ {id:"KZ07",name:"工装阔腿裤",price:14.2,v:[["黑",18],["军绿",12]]},
+ {id:"SW05",name:"针织开衫",price:18,v:[["灰",14],["驼色",11]]}
+];
+let S={tab:"s",q:"",cart:{},tax:true,open:false,doc:"销售单",client:"Client tmp",sort:"def",find:false,hq:"",seq:1052954,
+ orders:[]};
+const $=i=>document.getElementById(i);
+const f2=n=>n.toFixed(2);
+const P=id=>PR.find(p=>p.id==id);
+function lines(){S.lo=S.lo||{};return Object.keys(S.cart).filter(k=>S.cart[k]>0&&P(k.split("|")[0])).map(k=>{const[id,c]=k.split("|");const p=P(id),o=S.lo[k]||{};const pr=o.pr!=null?o.pr:p.price,nm=o.n!=null?o.n:p.name;const cat=o.cat!=null?o.cat:(p.cat||"");return{k,p,c,cat,q:S.cart[k],pr,nm,amt:+(S.cart[k]*pr).toFixed(2)}})}
+const sub=()=>lines().reduce((a,l)=>a+l.amt,0);
+const units=()=>lines().reduce((a,l)=>a+l.q,0);
+const tot=()=>sub()*(S.tax?1.21:1);
+function toast(t){const e=document.createElement("div");e.className="toast";e.textContent=t;document.body.appendChild(e);setTimeout(()=>e.remove(),1400)}
+function sheet(h,opts,ex,cancel){$("ov").innerHTML=`<div class="sheet" onclick="if(event.target==this)cl()"><div>${h?`<h3>${h}</h3>`:""}${opts}${ex||""}<button class="opt c" onclick="cl()">${cancel||"取消"}</button></div></div>`}
+function cl(){$("ov").innerHTML=""}
+function tab(t){S.tab=t;S.find=false;render()}
+function add(k,d){S.cart[k]=Math.max(0,(S.cart[k]||0)+d);render(1)}
+function prodSheet(id){
+  const p=P(id);const n=units();
+  const ex=n?`<button class="opt" style="font-weight:700;font-size:18px" onclick="cl();tab('e')">去开单 · 共 ${n} 件 · ${f2(tot())}</button>`:"";
+  sheet(`<span style="display:flex;align-items:center;gap:12px">${thumb(p,"prodPhoto('"+id+"')")}<span>${esc(p.name)} · ${f2(p.price)}</span></span>`,p.v.map(([c,s])=>{const k=id+"|"+c;return `<div class="li"><div class="g"><div class="n">${c}</div><div class="s">${stkHtml(id,c)}</div></div><div class="stp"><button aria-label="减" onclick="add('${k}',-1);prodSheet('${id}')">−</button><b style="cursor:pointer" onclick="setQty('${k}','${id}')">${S.cart[k]||0}</b><button aria-label="加" onclick="add('${k}',1);prodSheet('${id}')">+</button></div></div>`}).join(""),ex,"继续选货");
+}
+function list(q){
+  q=(q||"").trim().toLowerCase();
+  const r=PR.filter(p=>!q||p.id.toLowerCase().includes(q)||p.name.includes(q));
+  return r.length?r.map(p=>`<div class="li" style="cursor:pointer" onclick="prodSheet('${p.id}')">${thumb(p)}<div class="g"><div class="n">${esc(p.name)}</div><div class="s">货号 ${p.id} · 共 ${p.v.length} 色 · 库存 ${p.v.reduce((a,v)=>a+v[1],0)}</div></div><div>${f2(p.price)}</div></div>`).join(""):'<div class="empty"><p>没有找到商品</p></div>';
+}
+function render(keep){persist();
+  const m=$("main"),sc=m.scrollTop;
+  document.querySelectorAll("#tabs button").forEach(b=>b.className=b.dataset.t==S.tab?"on":"");
+  const T=[["s","search","搜索"],["e","edit","开单"],["h","list","历史"],["m","more","更多"]];
+  $("tabs").innerHTML=T.map(([k,i,n])=>`<button data-t="${k}" class="${S.tab==k?'on':''}" onclick="tab('${k}')">${I[i]}${n}${k=="e"&&units()?`<span class="badge">${units()}</span>`:""}</button>`).join("");
+  $("foot").innerHTML="";
+  if(S.tab=="s"){
+    $("top").innerHTML=`<div class="srch" style="width:100%"><button onclick="openSearch()" style="text-align:left">${I.search}搜索货号</button><button onclick="listAll()">${I.grid}商品列表</button></div>`;
+    m.innerHTML="";
+  }else if(S.tab=="e"){
+    $("top").innerHTML=`<button class="dd" onclick="sheet('单据类型',['销售单','报价单','退货单'].map(x=>'<button class=opt onclick=&quot;S.doc=\\''+x+'\\';cl();render()&quot;>'+x+'</button>').join(''))">${I.folder}${S.doc}</button><button class="dd" onclick="clientMenu()">${I.user}${S.client}</button><span class="sp"></span><button class="go" ${units()?"":"disabled"} onclick="cashier()">下单${units()?"("+units()+")":""}</button>`;
+    const L=lines();
+    m.innerHTML=L.length?cartHtml(L):
+     `<div class="empty"><p>购物车是空的，可用以下方式添加商品</p><button onclick="openSearch()">搜索</button><button onclick="scanIt()">扫码录货</button><button onclick="listAll()">商品列表</button></div>`;
+    $("foot").innerHTML=`<div class="foot"><div class="det ${S.open?'open':''}"><div><span>小计</span><span>${f2(sub())}</span></div><div><span>税 21%</span><span>${f2(S.tax?sub()*.21:0)}</span></div></div><div class="r"><button class="ico" aria-label="展开明细" onclick="S.open=!S.open;render(1)" style="transform:rotate(${S.open?180:0}deg)"><svg viewBox="0 0 24 24"><path d="M6 15l6-6 6 6"/></svg></button><button class="tax ${S.tax?'':'off'}" onclick="S.tax=!S.tax;render(1)">TAX+21.00%</button><div class="cnt"><svg viewBox="0 0 24 24" width="22"><circle cx="12" cy="12" r="9" fill="currentColor" stroke="none"/><path d="M12 8v8M8 12h8" stroke="#fff"/></svg>${units()}</div><div class="cnt"><svg viewBox="0 0 24 24" width="22"><circle cx="12" cy="12" r="9" fill="currentColor" stroke="none"/><path d="M8 12h8" stroke="#fff"/></svg>0</div><div class="tot">${f2(tot())}</div></div></div>`;
+  }else if(S.tab=="h"){
+    $("top").innerHTML=`<div class="hl" style="width:100%;padding:0"><button class="ico" aria-label="菜单">${I.menu}</button>${S.find?`<input id="hi" class="t" style="border:0;background:none;outline:0;color:var(--ink);font:inherit;font-size:18px" placeholder="单号或客户" value="${S.hq}" oninput="S.hq=this.value;render(1)">`:'<div class="t">最近三个月|销售单</div>'}<button class="ico" aria-label="搜索" onclick="S.find=!S.find;S.hq='';render()">${I.search}</button></div>`;
+    let o=S.orders.filter(x=>!S.hq||String(x.no).includes(S.hq)||x.cl.toLowerCase().includes(S.hq.toLowerCase()));
+    if(S.sort=="amt")o=[...o].sort((a,b)=>b.a-a.a);
+    m.innerHTML=`<button class="sortb" onclick="S.sort=S.sort=='def'?'amt':'def';render()">${S.sort=="def"?"默认排序":"按金额排序"}</button>`+(o.map(x=>`<div class="o" onclick="detail(${x.no})">${x.tax?'<div class="corner"></div>':''}<div class="stripe"></div><div class="g"><div class="no">#${x.no}</div><div class="cl">${x.cl}</div>${x.addr?`<div class="addr">${x.addr}</div>`:""}</div><div class="q">${x.u}</div><div class="rt"><div class="d">${x.d}</div><div class="a">${f2(x.a)}</div></div></div>`).join("")||'<div class="empty"><p>没有记录</p></div>');
+  }else{
+    $("top").innerHTML=`<div class="top" style="width:100%;padding:0"><button class="ico" style="color:var(--ink)" aria-label="扫一扫" onclick="scanIt()">${I.scan}</button><div class="sp" style="text-align:center;font-size:21px;font-weight:600">更多</div><button class="ico" style="color:var(--ink)" aria-label="账户" onclick="toast('当前账户：演示')">${I.user}</button></div>`;
+    const G=(a)=>`<div class="grid">${a.map(([i,n,fn])=>`<button onclick="${fn}">${I[i]}${n}</button>`).join("")}</div>`;
+    m.innerHTML=`<div class="ban">想让客户在电脑上自己下单？<b>开通网页下单入口</b>演示横幅，可自行替换</div>
+     <div class="sec">管理</div>${G([["tool","清除数据","resetAll()"],["sync","导出备份","exportData()"],["lock","导入备份","importMenu()"]])}
+     <div class="sec">工具</div>${G([["tag","新建商品","newP()"],["scan","扫一扫","scanIt()"],["card","种类管理","catManage()"]])}
+     <div class="sec">服务</div>${G([["help","帮助中心","toast('帮助中心')"]])}
+     <div class="sec">其他</div>${G([["ver","标准版","toast('版本 1.0.0')"],["net","网络检测","toast('网络正常')"]])}`;
+  }
+  if(keep)m.scrollTop=sc;
+}
+
+const CU=[{name:"Client tmp"},{name:"张丽 · 示例客户"}];
+const COUNTRIES=["中国","西班牙","法国","意大利","葡萄牙","德国","未选择"];
+let C=null,AD=null,LK=null;
+I.plus='<svg viewBox="0 0 24 24"><path d="M12 4v16M4 12h16"/></svg>';
+const CHV='<svg viewBox="0 0 24 24" width="20" style="color:var(--mute)"><path d="M9 5l7 7-7 7"/></svg>';
+function closeAll(){$("pg").innerHTML="";$("pg2").innerHTML="";F=C=AD=LK=null;render(1)}
+function clientMenu(){
+  const it=(ic,t,fn)=>`<button class="pm" onclick="${fn}">${I[ic]}${t}</button>`;
+  $("ov").innerHTML=`<div class="sheet" style="background:transparent;align-items:flex-start;justify-content:flex-start" onclick="if(event.target==this)cl()"><div class="pop">${it("user",esc(S.client),"cl()")}${it("search","搜索客户","cl();cuSearch()")}${it("scan","扫描名片","cl();toast('演示版暂不支持相机扫描')")}${it("plus","创建客户","cl();lkOpen()")}</div></div>`;
+}
+function cuSearch(){
+  $("pg").innerHTML=`<div class="pg"><div class="top" style="gap:0;padding:0 8px"><button class="ico" style="color:var(--ink)" aria-label="返回" onclick="closeAll()">${BACK}</button><input id="cq" class="sqi" style="border:0;margin-left:8px" placeholder="搜索客户" oninput="cuBody(this.value)"></div><div id="cb" class="spb"></div></div>`;
+  cuBody("");$("cq").focus();
+}
+function cuBody(q){
+  q=q.trim().toLowerCase();const r=CU.filter(c=>!q||c.name.toLowerCase().includes(q));
+  $("cb").innerHTML=r.length?r.map(c=>`<div class="li" style="cursor:pointer" data-n="${esc(c.name)}" onclick="useC(this.dataset.n)"><div class="g n">${esc(c.name)}</div></div>`).join(""):`<div class="nf">没有找到客户<br><button class="bb" onclick="lkOpen()">创建客户</button></div>`;
+}
+function useC(n){S.client=n;closeAll();toast("已选择 "+n)}
+function pickV(o,k,title,arr,fn){sheet(title,arr.map(x=>`<button class="opt" onclick="${o}.${k}='${x}';cl();${fn}()">${x}</button>`).join(""))}
+function tgo(o,k,cls){return `<label class="tg gr ${cls||""}"><input type="checkbox" ${eval(o)[k]?"checked":""} onchange="${o}.${k}=this.checked"><span></span></label>`}
+function inp(o,k,ph,mode){const v=eval(o)[k];return `<input class="f" ${ph?`placeholder="${ph}"`:""} inputmode="${mode||"text"}" value="${esc(v)}" oninput="${o}.${k}=this.value">`}
+function pre(o,k){return `<input class="f pre" placeholder="区号" inputmode="tel" value="${esc(eval(o)[k])}" oninput="${o}.${k}=this.value">`}
+const hdrP=(t,xf,okf,id)=>`<div class="top" style="height:72px;padding:0 6px"><button class="ico" style="color:var(--ink)" aria-label="关闭" onclick="${xf}"><svg viewBox="0 0 24 24"><path d="M5 5l14 14M19 5L5 19"/></svg></button><div style="flex:1;text-align:center;font-size:21px;font-weight:600">${t}</div><button ${id?`id="${id}"`:""} class="ico" style="color:var(--ink)" aria-label="保存" onclick="${okf}"><svg viewBox="0 0 24 24" stroke-width="2.6"><path d="M4 12l5 5L20 6"/></svg></button></div>`;
+/* step 1: company lookup */
+function lkOpen(){LK={country:"未选择",vat:""};lkRender()}
+function lkRender(){
+  $("pg").innerHTML=`<div class="pg"><div class="top" style="padding:0 8px"><button class="ico" style="color:var(--ink)" aria-label="返回" onclick="closeAll()">${BACK}</button><div style="flex:1;text-align:center;font-size:20px">示例公司</div><button class="go" style="background:#4a6cf7;padding:12px 16px" onclick="cNew()">跳过查询</button></div><div class="gap" style="height:30px"></div><div class="rw" style="cursor:pointer" onclick="pickV('LK','country','国家',COUNTRIES,'lkRender')"><div class="l w">国家</div><div class="v k">${LK.country=="未选择"?"":LK.country}</div>${CHV}</div><div class="rw"><div class="l">增值税号</div>${inp("LK","vat")}</div><div style="flex:1"></div><button class="bot" onclick="lkFind()">查找公司信息</button></div>`;
+}
+function lkFind(){
+  if(!LK.vat.trim()){toast("请输入增值税号");return}
+  toast("未找到公司信息，请手动填写");cNew();
+}
+/* step 2: new customer */
+function cNew(){
+  C={disc:"",debt:true,limit:"",zone:"未选择",name:"",pre:"",tel:"",land:"",note:"",country:LK?LK.country:"未选择",tax:"",vat:LK?LK.vat.trim():"",company:"",mail:"",addr:"",zip:"",city:"",tab:0,addrs:[]};
+  cRender();
+}
+function cNote(){dlg("备注（最长250个字符）",C.note,n=>{C.note=n.slice(0,250);cRender()})}
+function cRender(){
+  const t=C.tab;
+  const head=hdrP("新建客户","closeAll()","cSave()")+`<div class="seg"><button class="${t==0?'on':''}" onclick="C.tab=0;cRender()">基本资料</button><button class="${t==1?'on':''}" onclick="C.tab=1;cRender()">收货地址</button></div>`;
+  let body;
+  if(t==0){
+    body=`<div class="rw" style="min-height:130px"><div class="l">头像</div><span style="flex:1"></span><button class="cam" aria-label="上传头像" onclick="toast('演示版暂不支持拍照')"><svg viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M9 4l-1.5 2H5a2 2 0 00-2 2v10a2 2 0 002 2h14a2 2 0 002-2V8a2 2 0 00-2-2h-2.5L15 4zM12 9a4 4 0 110 8 4 4 0 010-8z"/></svg></button></div>
+    <div class="rw"><div class="l">默认折扣</div>${inp("C","disc","","decimal")}<span class="u">%</span></div>
+    <div class="rw"><div class="l w" style="flex:none;width:auto">允许欠款</div>${tgo("C","debt")}<span style="margin-left:6px">上限</span>${inp("C","limit","","decimal")}</div>
+    <div class="rw" style="cursor:pointer" onclick="pickV('C','zone','Zone',['A区','B区','C区','未选择'],'cRender')"><div class="l w">Zone</div><div class="v">${C.zone}</div>${CHV}</div>
+    <div class="gap"></div>
+    <div class="rw"><div class="l">名字 *</div>${inp("C","name","必填")}</div>
+    <div class="rw"><div class="l">手机</div>${pre("C","pre")}${inp("C","tel","","tel")}</div>
+    <div class="rw"><div class="l">座机</div>${inp("C","land","","tel")}</div>
+    <div class="rw" style="cursor:pointer" onclick="cNote()"><div class="l w">备注</div><div class="v">${C.note?esc(C.note.slice(0,14)):"最长250个字符"}</div>${CHV}</div>
+    <div class="gap"></div>
+    <div class="rw" style="cursor:pointer" onclick="pickV('C','country','国家',COUNTRIES,'cRender')"><div class="l w">国家</div><div class="v">${C.country}</div>${CHV}</div>
+    <div class="rw"><div class="l">企业税号</div>${inp("C","tax")}</div>
+    <div class="rw"><div class="l">增值税号</div>${inp("C","vat")}</div>
+    <div class="rw"><div class="l">公司名</div>${inp("C","company")}</div>
+    <div class="rw"><div class="l">邮箱</div>${inp("C","mail","","email")}</div>
+    <div class="rw"><div class="l">地址</div><textarea class="f" oninput="C.addr=this.value">${esc(C.addr)}</textarea></div>
+    <div class="rw"><div class="l">邮编</div>${inp("C","zip")}</div>
+    <div class="rw"><div class="l">城市</div>${inp("C","city")}</div>`;
+    $("pg").innerHTML=`<div class="pg">${head}<div class="fb">${body}</div></div>`;
+  }else{
+    body=C.addrs.map(a=>`<div class="li"><div class="g"><div class="n">${esc(a.name)}${a.def?'<span class="pill">默认</span>':""}</div><div class="s">${esc(a.addr)} · ${esc(a.zip)} ${esc(a.city)}</div></div></div>`).join("");
+    $("pg").innerHTML=`<div class="pg">${head}<div class="fb" style="background:var(--bar)">${body}</div><button class="bot" onclick="aNew()">新建地址</button></div>`;
+  }
+}
+function cSave(){
+  if(!C.name.trim()){C.tab=0;cRender();toast("请填写名字");return}
+  CU.push({name:C.name.trim()});S.client=C.name.trim();closeAll();toast("客户已创建");
+}
+/* step 3: new address */
+function aNew(){AD={name:"",pre:"",tel:"",addr:"",zip:"",city:"",country:"未选择",def:true,sync:true};aRender()}
+function aChk(){const ok=AD.name.trim()&&AD.addr.trim();const b=$("ak");if(b)b.style.opacity=ok?1:.35}
+function aRender(){
+  $("pg2").innerHTML=`<div class="pg">${hdrP("新建地址","$('pg2').innerHTML=''","aSave()","ak")}<div class="fb">
+  <div class="rw"><div class="l">收货人</div><input class="f" value="${esc(AD.name)}" oninput="AD.name=this.value;aChk()"></div>
+  <div class="rw"><div class="l">手机号码</div>${pre("AD","pre")}${inp("AD","tel","","tel")}</div>
+  <div class="rw"><div class="l">详细地址</div><textarea class="f" oninput="AD.addr=this.value;aChk()">${esc(AD.addr)}</textarea></div>
+  <div class="rw"><div class="l">邮编</div>${inp("AD","zip")}</div>
+  <div class="rw"><div class="l">城市</div>${inp("AD","city")}</div>
+  <div class="rw" style="cursor:pointer" onclick="pickV('AD','country','国家',COUNTRIES,'aRender')"><div class="l w">国家</div><div class="v">${AD.country=="未选择"?"":AD.country}</div>${CHV}</div>
+  <div class="rw"><div class="l w">设为默认</div>${tgo("AD","def","lt")}</div>
+  <div class="rw"><div class="l w">同步基本资料页面信息</div>${tgo("AD","sync")}</div></div></div>`;
+  aChk();
+}
+function aSave(){
+  if(!(AD.name.trim()&&AD.addr.trim())){toast("请填写收货人和详细地址");return}
+  if(AD.def)C.addrs.forEach(a=>a.def=false);
+  C.addrs.push({...AD});
+  if(AD.sync){if(!C.addr)C.addr=AD.addr;if(!C.zip)C.zip=AD.zip;if(!C.city)C.city=AD.city;if(!C.tel){C.tel=AD.tel;C.pre=AD.pre}if(C.country=="未选择")C.country=AD.country}
+  $("pg2").innerHTML="";cRender();toast("地址已保存");
+}
+function stkHtml(id,c){const p=P(id),v=p&&p.v.find(x=>x[0]==c),n=v?v[1]:0;return `库存 <u onclick="setStock('${id}','${c}')" style="cursor:pointer;padding:6px 2px;color:${n<0?'var(--red)':'var(--blue)'}">${n}</u>`}
+function setStock(id,c){
+  const p=P(id),v=p&&p.v.find(x=>x[0]==c);if(!v)return;
+  dlg("库存数量（退货时可改回）",v[1],n=>{const q=parseInt(n);if(isNaN(q)){toast("请输入数字");return}
+  v[1]=q;toast("库存已更新");
+  if($("ov").innerHTML)prodSheet(id);
+  render(1)},1);
+}
+function fcStock(i){dlg("库存数量",F.colors[i][1],n=>{const q=parseInt(n);if(isNaN(q)){toast("请输入数字");return}F.colors[i][1]=q;fRender()},1)}
+function setQty(k,id){
+  dlg("数量",S.cart[k]||0,n=>{const q=parseInt(n);if(isNaN(q)||q<0){toast("请输入数字");return}
+  S.cart[k]=q;if(id)prodSheet(id);render(1)},1);
+}
+
+
+let ND=null;
+function dlg(title,init,cb,num){
+  ND={cb,num,v:String(init==null?"":init),fresh:!!num};
+  const kp=num?`<div class="kp"><div class="hd" onclick="ndK('ok')"><svg viewBox="0 0 24 24" width="40"><path d="M4 9l8 6 8-6"/></svg></div><div class="kg">${[1,2,3,4,5,6,7,8,9].map(n=>`<button onclick="ndK('${n}')">${n}</button>`).join("")}<button disabled></button><button onclick="ndK('0')">0</button><button onclick="ndK('.')">.</button><button class="bs" aria-label="删除" onclick="ndK('<')"><svg viewBox="0 0 24 24" width="44"><path d="M9 6h11v12H9l-6-6z"/><path d="M12 9l5 6M17 9l-5 6"/></svg></button></div></div>`:"";
+  $("nd").innerHTML=`<div class="bd" onclick="ndX()"></div><div class="box"><h4>${esc(title)}</h4>${num?`<div id="ndv" class="val"></div>`:`<input id="ndi" class="val" value="${esc(ND.v)}" onkeydown="if(event.key=='Enter')ndK('ok')">`}<div class="ac"><button onclick="ndX()">取消</button><button onclick="ndK('ok')">确定</button></div></div>${kp}`;
+  ndShow();if(!num){const i=$("ndi");i.focus();i.select()}
+}
+function ndShow(){const e=$("ndv");if(e){e.textContent=ND.v;e.className="val"+(ND.fresh?" ph":"")}}
+function ndK(k){
+  if(!ND)return;
+  if(k=="ok"){const v=ND.num?ND.v:$("ndi").value,cb=ND.cb;$("nd").innerHTML="";ND=null;cb(v);return}
+  if(k=="<"){ND.v=ND.fresh?"":ND.v.slice(0,-1);ND.fresh=false}
+  else{if(ND.fresh){ND.v="";ND.fresh=false}if(k=="."&&ND.v.includes("."))return;if(ND.v=="0"&&k!=".")ND.v="";ND.v+=k}
+  ndShow();
+}
+function ndX(){$("nd").innerHTML="";ND=null}
+function numOf(v){const n=parseFloat(String(v).replace(",","."));return isNaN(n)?null:n}
+let CATS=["PANTALON","JUPES","ROBES","T-SHIRT","CAMISETA"],CPK=null;
+function catPick(title,cur,cb,clear){
+  CPK={cb};
+  sheet(title,CATS.map((c,i)=>`<button class="opt" style="${c==cur?'font-weight:700':''}" onclick="catSel(${i})">${esc(c)}${c==cur?' ✓':''}</button>`).join("")+(clear&&cur?`<button class="opt" onclick="catSel(-1)">不设种类</button>`:"")+`<button class="opt" onclick="catAdd(1)">＋ 添加新种类…</button><button class="opt" onclick="cl();catManage()">管理种类（删除）</button>`);
+}
+function catSel(i){const cb=CPK&&CPK.cb;cl();if(cb)cb(i<0?"":CATS[i])}
+function catAdd(pickIt){
+  const cb=CPK&&CPK.cb;cl();
+  dlg("添加新种类","",n=>{n=n.trim().slice(0,30);if(!n)return;if(!CATS.some(c=>c.toLowerCase()==n.toLowerCase()))CATS.push(n);else n=CATS.find(c=>c.toLowerCase()==n.toLowerCase());persist();if(pickIt&&cb)cb(n);else catManage()});
+}
+function catManage(){
+  sheet("管理种类（点 ✕ 删除）",CATS.map((c,i)=>`<div class="li"><div class="g n">${esc(c)}</div><button class="ico" aria-label="删除" onclick="CATS.splice(${i},1);persist();catManage()"><svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>`).join("")||'<div class="nf">还没有种类</div>',`<button class="opt" onclick="CPK=null;catAdd(0)">＋ 添加新种类…</button>`,"完成");
+}
+
+const CAMI='<svg viewBox="0 0 24 24"><path d="M9 4l-1.5 2H5a2 2 0 00-2 2v10a2 2 0 002 2h14a2 2 0 002-2V8a2 2 0 00-2-2h-2.5L15 4z"/><circle cx="12" cy="13" r="3.5"/></svg>';
+let PHC=null;
+function thumb(p,fn){return p&&p.photo?`<img class="pth" src="${p.photo}" alt="" onclick="event.stopPropagation();${fn||`bigPhoto('${p.id}')`}">`:`<span class="pth" ${fn?`onclick="event.stopPropagation();${fn}"`:""}>${CAMI}</span>`}
+function photoMenu(has,cb,delcb,view){
+  PHC=cb;
+  sheet("商品照片",(view?`<button class="opt" onclick="cl();${view}">查看大图</button>`:"")+`<label class="opt fl">拍照<input type="file" accept="image/*" capture="environment" onchange="readPhoto(this)"></label><label class="opt fl">从相册选择<input type="file" accept="image/*" onchange="readPhoto(this)"></label>`+(has?`<button class="opt" style="color:var(--red)" onclick="cl();PHC=null;(${delcb})()">删除照片</button>`:""));
+}
+function readPhoto(inp){
+  const f=inp.files&&inp.files[0];if(!f||!PHC){cl();return}cl();
+  const cb=PHC;const url=URL.createObjectURL(f),im=new Image();
+  im.onload=()=>{const m=420,r=Math.min(1,m/Math.max(im.width,im.height)),c=document.createElement("canvas");c.width=Math.round(im.width*r);c.height=Math.round(im.height*r);c.getContext("2d").drawImage(im,0,0,c.width,c.height);URL.revokeObjectURL(url);cb(c.toDataURL("image/jpeg",.65))};
+  im.onerror=()=>toast("无法读取这张图片");im.src=url;
+}
+
+function bigPhoto(id){const p=P(id);if(p&&p.photo)sheet(esc(p.name)+" · "+esc(p.id),`<img src="${p.photo}" alt="" style="width:100%;display:block">`,"","关闭")}
+function prodPhoto(id){
+  const p=P(id);
+  photoMenu(!!p.photo,d=>{p.photo=d;phSave(id,d);persist();prodSheet(id);render(1);toast("照片已保存")},`()=>{delete P('${id}').photo;phDel('${id}');persist();prodSheet('${id}');render(1)}`,p.photo?`bigPhoto('${id}')`:"");
+}
+function formPhoto(){photoMenu(!!F.photo,d=>{F.photo=d;fRender()},"()=>{F.photo='';fRender()}",F.photo?"fBig()":"")}
+function fBig(){sheet("",`<img src="${F.photo}" alt="" style="width:100%;display:block">`,"","关闭")}
+const PM=["Bank","Cash","CONTRA REMBOLSO"];
+let K=null;
+const SVG={
+ pdf:'<svg viewBox="0 0 24 24" width="30"><path d="M6 3h9l4 4v14H6z"/><path d="M9 11h6M9 14h6M9 17h4"/></svg>',
+ link:'<svg viewBox="0 0 24 24" width="30"><path d="M10 14a4 4 0 005.7 0l3-3a4 4 0 00-5.7-5.7l-1 1M14 10a4 4 0 00-5.7 0l-3 3a4 4 0 005.7 5.7l1-1"/></svg>',
+ share:'<svg viewBox="0 0 24 24" width="30"><path d="M12 15V4M8 8l4-4 4 4M5 12v8h14v-8"/></svg>',
+ chk:'<svg viewBox="0 0 24 24"><path d="M4 12l5 5L20 6"/></svg>',
+ pen:'<svg viewBox="0 0 24 24" width="26" style="color:var(--mute);margin-right:6px"><path d="M4 8v11h11M9 15l1-4 8-8 3 3-8 8z"/></svg>'
+};
+function cartHtml(L){
+  const g={};L.forEach(l=>(g[l.p.id]=g[l.p.id]||[]).push(l));
+  S.fold=S.fold||{};
+  return Object.keys(g).map(id=>{
+    const col=S.fold[id];
+    const head=`<div class="grp" onclick="S.fold['${id}']=!S.fold['${id}'];render(1)"><svg viewBox="0 0 24 24" style="color:var(--blue);transform:rotate(${col?180:0}deg)"><path d="M15 5l-7 7 7 7"/></svg><span style="flex:1">${esc(id)}</span><button class="ico" aria-label="更多" onclick="event.stopPropagation();grpMenu('${id}')">${I.more}</button></div>`;
+    if(col)return head;
+    return head+g[id].map(l=>`<div class="li ln"><div class="qn" onclick="setQty('${l.k}')">${l.q}<small>x1</small></div><div class="th" style="cursor:pointer" onclick="prodPhoto('${l.p.id}')">${l.p.photo?`<img src="${l.p.photo}" alt="">`:I.tag}</div><div class="g"><div class="n" style="cursor:pointer" onclick="lineMenu('${l.k}')">${esc(l.nm)} <span style="color:var(--blue);font-size:14px">编辑</span></div><div class="s">${l.cat?`<u style="cursor:pointer;color:var(--blue)" onclick="lineCat('${l.k}')">${esc(l.cat)}</u> · `:""}${esc(l.c)} · <u style="cursor:pointer;color:${l.pr!=l.p.price?'var(--red)':'var(--blue)'}" onclick="linePrice('${l.k}')">${f2(l.pr)}</u> · ${stkHtml(l.p.id,l.c)}</div><div class="stp"><button aria-label="减" onclick="add('${l.k}',-1)">−</button><button aria-label="加" onclick="add('${l.k}',1)">+</button></div></div><div class="lt">${f2(l.amt)}</div></div>`).join("");
+  }).join("");
+}
+function lineMenu(k){
+  const o=(S.lo||{})[k]||{};
+  sheet(esc((o.n!=null?o.n:P(k.split("|")[0]).name)+" · "+k.split("|")[1]),`<button class="opt" onclick="cl();linePrice('${k}')">修改价格</button><button class="opt" onclick="cl();lineName('${k}')">修改名称</button><button class="opt" onclick="cl();lineCat('${k}')">修改种类</button>${o.pr!=null||o.n!=null||o.cat!=null?`<button class="opt" onclick="S.lo['${k}']={};cl();render(1)">恢复原价、原名和原种类</button>`:""}<button class="opt" style="color:var(--red)" onclick="delLine('${k}')">删除此行</button>`);
+}
+function linePrice(k){
+  const l=lines().find(x=>x.k==k);if(!l)return;
+  dlg("修改价格",l.pr,n=>{const v=numOf(n);if(v==null||v<0){toast("请输入价格");return}S.lo=S.lo||{};(S.lo[k]=S.lo[k]||{}).pr=+v.toFixed(2);render(1)},1);
+}
+function lineName(k){
+  const l=lines().find(x=>x.k==k);if(!l)return;
+  dlg("修改名称",l.nm,n=>{n=n.trim();if(!n){toast("名称不能为空");return}S.lo=S.lo||{};(S.lo[k]=S.lo[k]||{}).n=n.slice(0,60);render(1)});
+}
+function lineCat(k){
+  const l=lines().find(x=>x.k==k);if(!l)return;
+  catPick("选择种类",l.cat,n=>{S.lo=S.lo||{};(S.lo[k]=S.lo[k]||{}).cat=n;render(1)},1);
+}
+function delLine(k){delete S.cart[k];if(S.lo)delete S.lo[k];cl();render(1)}
+function grpMenu(id){sheet(id,`<button class="opt" style="color:var(--red)" onclick="delGrp('${id}')">删除此款</button>`)}
+function delGrp(id){Object.keys(S.cart).filter(k=>k.split("|")[0]==id).forEach(k=>{delete S.cart[k];if(S.lo)delete S.lo[k]});cl();render(1)}
+const kPaid=()=>PM.reduce((a,m)=>a+(K.pay[m]||0),0);
+const kDue=()=>+(tot()-K.round-kPaid()).toFixed(2);
+function cashier(){
+  if(!units()){toast("购物车是空的");return}
+  K={pay:{},round:0};kRender();
+}
+function kRender(){
+  const due=kDue();
+  $("pg").innerHTML=`<div class="pg"><div class="top" style="padding:0 8px"><button class="ico" style="color:var(--ink)" aria-label="返回" onclick="closeAll()">${BACK}</button><div style="flex:1;text-align:center;font-size:20px;color:var(--mute)">收银台</div><button class="go" style="background:#4a6cf7;padding:12px 18px" onclick="kDone()">完成</button></div><div class="fb" style="background:var(--bar)"><div class="sum"><div><span>客户:</span><span>${S.client=="Client tmp"?"散客":esc(S.client)}</span></div><div><span>订单:</span><span>${f2(tot())}</span></div><div><span>抹零:</span><span style="font-size:30px;cursor:pointer;display:flex;align-items:center" onclick="kRound()">${SVG.pen}${f2(K.round)}</span></div><div><span>未付款:</span><span style="color:var(--red);font-size:30px">${f2(due)}</span></div></div>${PM.map(m=>`<div class="rw" style="cursor:pointer" onclick="kPay('${m}')"><div class="l w">${m}</div><div class="v ${K.pay[m]?"k":""}" style="font-size:22px">${f2(K.pay[m]||0)}</div></div>`).join("")}</div></div>`;
+}
+function kPay(m){
+  dlg(m,K.pay[m]||Math.max(0,kDue()),n=>{const v=numOf(n);K.pay[m]=v==null?0:+Math.max(0,v).toFixed(2);kRender()},1);
+}
+function kRound(){
+  dlg("抹零",K.round,n=>{const v=numOf(n);K.round=v==null?0:+v.toFixed(2);kRender()},1);
+}
+function kDone(){
+  const due=kDue();
+  if(due<-0.005){toast("付款金额超过订单金额");return}
+  
+  const o={no:S.seq++,cl:S.client,u:units(),d:new Date().toLocaleDateString("en-GB").slice(0,5),dt:new Date().toLocaleString("zh-CN"),
+    a:+(tot()-K.round).toFixed(2),tax:S.tax,doc:S.doc,round:K.round,sub:+sub().toFixed(2),vat:S.tax?+(sub()*.21).toFixed(2):0,
+    pay:PM.filter(m=>K.pay[m]).map(m=>[m,K.pay[m]]),owed:due>0.005?due:0,
+    L:lines().map(l=>({id:l.p.id,n:l.nm,cat:l.cat,c:l.c,q:l.q,pr:l.pr,amt:l.amt}))};
+  S.orders.unshift(o);
+  if(S.doc!="报价单"){const sg=S.doc=="退货单"?1:-1;lines().forEach(l=>{const v=l.p.v.find(x=>x[0]==l.c);if(v)v[1]+=sg*l.q})}
+  S.cart={};S.lo={};S.open=false;S.fold={};
+  persist();okRender(o.no);render(1);
+}
+function okRender(no){
+  const o=S.orders.find(x=>x.no==no);
+  const pay=o.pay&&o.pay.length?o.pay.map(p=>p[0]+"("+f2(p[1])+")").join(", "):"";
+  $("pg").innerHTML=`<div class="pg"><div class="top" style="padding:0 6px 0 16px"><div style="flex:1;font-size:21px;font-weight:600">#${o.no}</div><button class="ico" style="color:var(--ink)" aria-label="保存为 PDF" onclick="docOpen(${o.no},'订单')">${SVG.pdf}</button><button class="ico" style="color:var(--ink)" aria-label="复制单据" onclick="copyDoc(${o.no})">${SVG.link}</button><button class="ico" style="color:var(--ink)" aria-label="分享" onclick="shareDoc(${o.no})">${SVG.share}</button></div><div class="fb" style="padding:26px 14px"><div class="okc">${SVG.chk}</div><div style="color:#6fcf9f;font-size:22px;text-align:center;margin:12px 0 26px">成功</div><div class="card"><div class="cr"><span>客户:</span><b style="font-weight:400">${esc(o.cl)}</b></div><div class="cr"><span>总金额:</span><b style="font-weight:400">${f2(o.a)}</b></div><div class="cr"><span>支付方式:</span><b style="font-weight:400">${esc(pay)}</b></div><div class="cr"><span>欠款:</span><b style="font-weight:400">${f2(o.owed||0)}</b></div><div class="cr"><span>运输方式:</span></div><div class="cr"><span>备注:</span></div></div><div style="display:flex;gap:14px;margin:18px 0"><button class="ob" onclick="printMenu(${o.no})">打印</button><button class="ob" onclick="closeAll();tab('h')">历史</button></div><button class="bot" style="border-radius:6px;background:#4a6cf7" onclick="nextCust()">下一位客户</button></div></div>`;
+}
+function nextCust(){S.client="Client tmp";S.doc="销售单";closeAll();tab("e")}
+function printMenu(no){sheet("打印",["订单","路单","配货单","发票"].map(t=>`<button class="opt" onclick="cl();docOpen(${no},'${t}')">${t}</button>`).join(""))}
+const mny=n=>f2(+n||0);
+function docBody(o,t){
+  const L=o.L||[],cust=o.cl=="Client tmp"?"散客":o.cl;
+  const tbl=(cols,rows)=>`<table class="dt"><tr>${cols.map(c=>`<th>${c}</th>`).join("")}</tr>${rows.map(r=>`<tr>${r.map(c=>`<td>${c}</td>`).join("")}</tr>`).join("")}</table>`;
+  const head=`<div style="display:flex;justify-content:space-between"><b style="font-size:20px">示例公司</b><span>${esc(o.dt||o.d)}</span></div><div style="font-size:22px;font-weight:700;margin:10px 0 2px">${t} #${o.no}</div><div>客户：${esc(cust)}</div>`;
+  const items=tbl(["商品","数量","单价","金额"],L.map(l=>[esc(l.n)+"<br><small>"+(l.cat?esc(l.cat)+" · ":"")+esc(l.c)+"</small>",l.q,mny(l.pr),mny(l.amt)]));
+  const paid=(o.pay||[]).reduce((a,p)=>a+p[1],0);
+  let b;
+  if(t=="订单")b=items+`<div class="tt">小计 ${mny(o.sub!=null?o.sub:o.a)}<br>税 21% ${mny(o.vat)}<br>抹零 ${mny(o.round)}<br><b style="font-size:18px">合计 ${mny(o.a)}</b><br>已付 ${mny(paid)}<br>欠款 ${mny(o.owed)}</div>`;
+  else if(t=="发票")b=items+`<div class="tt">税基 ${mny(o.sub!=null?o.sub:o.a)}<br>增值税 21% ${mny(o.vat)}<br><b style="font-size:18px">发票合计 ${mny(o.a)}</b></div>`;
+  else if(t=="配货单")b=tbl(["货号","商品 / 颜色","数量","已拣"],L.map(l=>[esc(l.id||""),esc(l.n)+" "+esc(l.c),l.q,"☐"]))+`<div class="tt">共 ${o.u} 件</div>`;
+  else b=tbl(["商品","数量"],L.map(l=>[esc(l.n)+" "+esc(l.c),l.q]))+`<div>总件数：<b>${o.u}</b></div><div style="margin-top:14px">收货地址：________________________</div><div style="margin-top:14px">承运：________________________</div><div style="margin-top:14px">备注：________________________</div><div style="margin-top:34px">签收：________________________</div>`;
+  return head+b;
+}
+function docText(o,t){
+  const L=o.L||[],noP=(t=="路单"||t=="配货单");
+  return [t+" #"+o.no,(o.dt||o.d),"客户："+(o.cl=="Client tmp"?"散客":o.cl),""].concat(L.map(l=>(l.id?l.id+" ":"")+l.n+" "+(l.cat?l.cat+" ":"")+l.c+" x"+l.q+(noP?"":" = "+mny(l.amt)))).concat(["","共 "+o.u+" 件"+(noP?"":"，合计 "+mny(o.a))]).join("\n");
+}
+function docOpen(no,t){
+  const o=S.orders.find(x=>x.no==no);if(!o)return;
+  $("pg2").innerHTML=`<div class="pg"><div class="top noprint" style="padding:0 8px"><button class="ico" style="color:var(--ink)" aria-label="返回" onclick="$('pg2').innerHTML=''">${BACK}</button><div style="flex:1;text-align:center;font-size:19px">${t} #${o.no}</div><button class="go" style="background:#4a6cf7;padding:12px 18px" onclick="doPrint()">打印</button></div><div class="fb"><div class="docp">${docBody(o,t)}</div><div class="noprint" style="display:flex;gap:10px;padding:0 12px 8px"><button class="ob" style="font-size:17px;padding:12px" onclick="shareDoc(${o.no},'${t}')">分享</button><button class="ob" style="font-size:17px;padding:12px" onclick="copyDoc(${o.no},'${t}')">复制文字</button></div><div class="noprint" style="padding:4px 16px 24px;color:var(--mute);font-size:13px">如果点“打印”没有反应，可以用“分享”发到打印 App，或用手机浏览器菜单里的“打印 / 保存为 PDF”。</div></div></div>`;
+}
+function doPrint(){try{window.print()}catch(e){toast("此环境无法直接打印，请用分享或浏览器菜单")}}
+function copyDoc(no,t){
+  const o=S.orders.find(x=>x.no==no);if(!o)return;const txt=docText(o,t||"订单");
+  const fb=()=>{const a=document.createElement("textarea");a.value=txt;a.style.position="fixed";a.style.opacity="0";document.body.appendChild(a);a.select();try{document.execCommand("copy");toast("已复制单据文字")}catch(e){toast("复制失败")}a.remove()};
+  try{navigator.clipboard.writeText(txt).then(()=>toast("已复制单据文字"),fb)}catch(e){fb()}
+}
+function shareDoc(no,t){
+  const o=S.orders.find(x=>x.no==no);if(!o)return;
+  if(navigator.share){navigator.share({title:(t||"订单")+" #"+o.no,text:docText(o,t||"订单")}).catch(()=>{})}else copyDoc(no,t);
+}
+function pickC(x){if(x=="新客户…"){x=prompt("客户名称")||S.client}S.client=x;cl();render()}
+function listAll(){sheet("商品列表",list(""))}
+function scanIt(){dlg("输入货号（模拟扫码）","JP02",c=>{const p=c&&PR.find(p=>p.id.toLowerCase()==c.trim().toLowerCase());if(p){add(p.id+"|"+p.v[0][0],1);S.tab="e";render();toast("已添加 "+p.name)}else if(c)toast("未找到货号")})}
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+let SP={q:"",f:"货号"},F=null;
+const BACK='<svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg>';
+function closePg(){$("pg").innerHTML="";F=null;render(1)}
+function openSearch(){SP.q="";spRender()}
+function fieldSheet(){sheet("搜索方式",["货号","名称"].map(x=>`<button class="opt" onclick="SP.f='${x}';cl();spRender()">${x}</button>`).join(""))}
+function spRender(){
+  $("pg").innerHTML=`<div class="pg"><div class="top" style="gap:0;padding:0 8px"><button class="ico" style="color:var(--ink)" aria-label="返回" onclick="closePg()">${BACK}</button><button class="dd" style="margin:0 10px 0 14px;color:var(--mute);font-size:16px" onclick="fieldSheet()">${SP.f}</button><input id="sq" class="sqi" value="${esc(SP.q)}" inputmode="${SP.f=="货号"?"decimal":"text"}" placeholder="请输入商品${SP.f}" enterkeyhint="search" oninput="SP.q=this.value;spBody()"><button id="sx" class="ico" aria-label="清除" onclick="SP.q='';$('sq').value='';spBody();$('sq').focus()"><svg viewBox="0 0 24 24" fill="currentColor" stroke="none"><circle cx="12" cy="12" r="10"/><path d="M8.5 8.5l7 7M15.5 8.5l-7 7" stroke="var(--card)" stroke-width="2"/></svg></button></div><div id="sb" class="spb"></div></div>`;
+  spBody();const i=$("sq");if(i){i.focus()}
+}
+function spBody(){
+  const raw=SP.q.trim(),q=raw.toLowerCase(),el=$("sb");
+  $("sx").style.visibility=q?"visible":"hidden";
+  if(!q){el.innerHTML="";return}
+  const r=PR.filter(p=>SP.f=="货号"?p.id.toLowerCase().includes(q):p.name.toLowerCase().includes(q));
+  el.innerHTML=r.length?r.map(p=>`<div class="li" style="cursor:pointer" onclick="prodSheet('${p.id}')">${thumb(p)}<div class="g"><div class="n">${esc(p.name)}</div><div class="s">货号 ${esc(p.id)} · 共 ${p.v.length} 色 · 库存 ${p.v.reduce((a,v)=>a+v[1],0)}</div></div><div>${f2(p.price)}</div></div>`).join(""):`<div class="nf"><button class="bb" onclick="newForm()">新建商品“${esc(raw)}”</button><p>如果商品由其他端口创建，请尝试</p><button class="bb" onclick="syncIt()">同步</button></div>`;
+}
+function syncIt(){toast("已同步，没有新商品")}
+function newForm(){
+  F={code:SP.q.trim().replace(/['"\\<>&\s]/g,""),price:"",disc:false,pack:"1",stock:"",origin:"未选择",cat:"PANTALON",sup:false,d1:false,d2:false,tab:0,colors:[],cq:"",asc:true,photo:""};
+  fRender();
+}
+function pick(k,arr){sheet(k=="origin"?"原产地":"系统分类",arr.map(x=>`<button class="opt" onclick="F.${k}='${x}';cl();fRender()">${x}</button>`).join("")+(k=="cat"?`<button class="opt" onclick="cl();dlg('自己写种类',F.cat,n=>{if(n.trim()){F.cat=n.trim().slice(0,30);fRender()}})">自己写…</button>`:""))}
+function tg(k){return `<label class="tg"><input type="checkbox" ${F[k]?"checked":""} onchange="F.${k}=this.checked"><span></span></label>`}
+function addColor(){dlg("颜色名称","",n=>{if(!n||!n.trim())return;const nm=n.trim().replace(/['"\\<>&]/g,"");setTimeout(()=>dlg("库存 · "+nm,"0",t=>{F.colors.push([nm,parseInt(t)||0]);fRender()},1),50)})}
+function fRender(){
+  const t=F.tab,CH='<svg viewBox="0 0 24 24" width="20" style="color:var(--mute)"><path d="M9 5l7 7-7 7"/></svg>';
+  const head=`<div class="top" style="height:78px;padding:0 6px"><button class="ico" style="color:var(--ink)" aria-label="关闭" onclick="closePg()"><svg viewBox="0 0 24 24"><path d="M5 5l14 14M19 5L5 19"/></svg></button><div style="flex:1;text-align:center;line-height:1.25"><div style="font-size:21px;font-weight:600">新建商品</div><div style="font-size:15px">示例公司</div></div><button class="ico" style="color:var(--ink)" aria-label="保存并继续新建" onclick="fSave(true)"><svg viewBox="0 0 24 24" width="30" stroke-width="2.6"><path d="M2 13l4 4 7-9M10 16l2 2 9-11"/></svg></button><button class="ico" style="color:var(--ink)" aria-label="保存" onclick="fSave(false)"><svg viewBox="0 0 24 24" stroke-width="2.6"><path d="M4 12l5 5L20 6"/></svg></button></div><div class="seg"><button class="${t==0?'on':''}" onclick="F.tab=0;fRender()">基本资料</button><button class="${t==1?'on':''}" onclick="F.tab=1;fRender()">图片/库存/条码</button></div>`;
+  let body;
+  if(t==0){
+    body=`<div class="rw" style="min-height:96px"><div class="l">商品照片</div><span style="flex:1"></span>${F.photo?`<img class="pth" style="width:76px;height:76px" src="${F.photo}" alt="" onclick="formPhoto()">`:`<button class="pth" style="width:76px;height:76px" aria-label="拍照" onclick="formPhoto()">${CAMI}</button>`}</div><div class="gap" style="height:18px"></div>
+    <div class="rw"><div class="l">货号 *</div><input class="f" value="${esc(F.code)}" oninput="F.code=this.value"></div>
+    <div class="rw"><div class="l">销售价</div><input class="f" inputmode="decimal" value="${esc(F.price)}" oninput="F.price=this.value"><button class="ico" aria-label="价格设置" onclick="toast('价格设置')"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M18.4 5.6l-2.1 2.1M7.7 16.3l-2.1 2.1"/></svg></button></div>
+    <div class="rw"><div class="l">折扣</div>${tg("disc")}</div>
+    <div class="rw"><div class="l">包装数 *</div><input class="f" inputmode="numeric" value="${esc(F.pack)}" oninput="F.pack=this.value"></div>
+    <div class="rw"><div class="l">库存数量</div><input class="f" inputmode="numeric" placeholder="${F.colors.length?'按颜色分别填写':'0'}" value="${esc(F.stock)}" oninput="F.stock=this.value"></div>
+    <div class="rw" style="cursor:pointer" onclick="pick('origin',['中国','西班牙','土耳其','未选择'])"><div class="l w">原产地</div><div class="v">${F.origin}</div>${CH}</div>
+    <div class="gap"></div>
+    <div class="rw" style="cursor:pointer" onclick="catPick('系统分类',F.cat,n=>{F.cat=n;fRender()})"><div class="l w">系统分类</div><div class="v k">${F.cat}</div>${CH}</div>
+    <div class="gap"></div>
+    <div class="rw"><div class="l w">Supplier</div>${tg("sup")}</div>
+    <div class="rw"><div class="l w">To define1</div>${tg("d1")}</div>
+    <div class="rw"><div class="l w">To define2</div>${tg("d2")}</div>`;
+  }else{
+    const q=F.cq.trim().toLowerCase();
+    let cs=F.colors.map((c,i)=>({c,i})).filter(x=>!q||x.c[0].toLowerCase().includes(q));
+    cs.sort((a,b)=>F.asc?a.c[0].localeCompare(b.c[0]):b.c[0].localeCompare(a.c[0]));
+    body=`<label class="sbox">${I.search}<input placeholder="搜索" value="${esc(F.cq)}" oninput="F.cq=this.value;fRender();const e=document.querySelector('.sbox input');e.focus();e.setSelectionRange(99,99)"></label>
+    <div class="cbar"><button style="flex:1" onclick="addColor()">添加颜色</button><button class="ico" style="color:var(--blue);border-left:1px solid var(--line);border-radius:0;min-width:56px" aria-label="排序" onclick="F.asc=!F.asc;fRender()"><svg viewBox="0 0 24 24" stroke-width="2.6"><path d="M3 6h18M3 12h12M3 18h7"/></svg></button></div>
+    ${cs.map(x=>`<div class="li"><div class="g"><div class="n">${esc(x.c[0])}</div><div class="s">库存 <u onclick="fcStock(${x.i})" style="cursor:pointer;padding:6px 2px;color:var(--blue)">${x.c[1]}</u></div></div><button class="ico" aria-label="删除" onclick="F.colors.splice(${x.i},1);fRender()"><svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>`).join("")}`;
+  }
+  $("pg").innerHTML=`<div class="pg">${head}<div class="fb">${body}</div></div>`;
+}
+function fSave(cont){
+  const id=F.code.trim().replace(/['"\\<>&\s]/g,"");
+  if(!id){toast("请填写货号");return}
+  if(!(parseInt(F.pack)>=1)){toast("包装数至少为 1");return}
+  let uid=id,n=1;while(PR.some(p=>p.id.toLowerCase()==uid.toLowerCase()))uid=id+"-"+(++n);
+  PR.push({id:uid,name:id,cat:F.cat,photo:F.photo||undefined,price:parseFloat(String(F.price).replace(",","."))||0,v:F.colors.length?F.colors.map(c=>[c[0],c[1]]):[["默认",parseInt(F.stock)||0]]});
+  if(F.photo)phSave(uid,F.photo);
+  if(cont){newForm.call(null);F.code="";fRender();toast(uid!=id?"货号重复，已存为 "+uid:"已保存，继续新建")}
+  else{toast(uid!=id?"货号重复，已存为 "+uid:"商品已保存");closePg();tab("s")}
+}
+function newP(){SP.q="";newForm()}
+function place(){
+  S.orders.unshift({no:S.seq++,cl:S.client,u:units(),d:new Date().toLocaleDateString("en-GB").slice(0,5),a:+tot().toFixed(2),tax:S.tax,L:lines().map(l=>({n:l.p.name,c:l.c,q:l.q,amt:l.amt}))});
+  if(S.doc!="报价单"){const sg=S.doc=="退货单"?1:-1;lines().forEach(l=>{const v=l.p.v.find(x=>x[0]==l.c);if(v)v[1]+=sg*l.q})}
+  S.cart={};S.open=false;toast(S.doc+"已提交");tab("h")
+}
+function detail(no){
+  const o=S.orders.find(x=>x.no==no);
+  sheet("#"+o.no+" · "+o.cl,(o.L.length?o.L.map(l=>`<div class="li"><div class="g"><div class="n">${l.n}</div><div class="s">${l.c}</div></div><div>${l.q} × = ${f2(l.amt)}</div></div>`).join(""):'<div class="li"><div class="g s" style="color:var(--mute)">示例订单，无明细</div></div>')+`<div class="li"><div class="g n">合计 ${o.u} 件${o.tax?'<span class="pill">含税</span>':""}</div><div class="n">${f2(o.a)}</div></div>`,`<button class="opt" onclick="cl();printMenu(${o.no})">打印</button>`,"关闭");
+}
+
+var _db=null;
+function phDB(){return _db||(_db=new Promise((ok,no)=>{try{const r=indexedDB.open("kdb_photos",1);r.onupgradeneeded=()=>r.result.createObjectStore("ph");r.onsuccess=()=>ok(r.result);r.onerror=()=>no(r.error)}catch(e){no(e)}}))}
+function phSave(id,url){phDB().then(d=>d.transaction("ph","readwrite").objectStore("ph").put(url,id)).catch(()=>toast("照片无法保存到手机，请换浏览器"))}
+function phDel(id){phDB().then(d=>d.transaction("ph","readwrite").objectStore("ph").delete(id)).catch(()=>{})}
+function phLoad(){phDB().then(d=>{const st=d.transaction("ph").objectStore("ph"),r=st.openCursor();r.onsuccess=()=>{const c=r.result;if(c){const p=P(c.key);if(p)p.photo=c.value;c.continue()}else render(1)}}).catch(()=>{});try{navigator.storage&&navigator.storage.persist&&navigator.storage.persist()}catch(e){}}
+
+function phAll(){return phDB().then(d=>new Promise(ok=>{const o={},r=d.transaction("ph").objectStore("ph").openCursor();r.onsuccess=()=>{const c=r.result;if(c){o[c.key]=c.value;c.continue()}else ok(o)};r.onerror=()=>ok(o)})).catch(()=>({}))}
+async function exportData(){
+  toast("正在打包…");
+  persist();
+  const ph=await phAll();
+  const txt=JSON.stringify({app:"kaidanbao",v:1,t:Date.now(),ls:localStorage.getItem(KEY)||"",photos:ph});
+  const fn="kaidanbao-backup-"+new Date().toISOString().slice(0,10)+".json";
+  const blob=new Blob([txt],{type:"application/json"});
+  try{const dl=window.claude&&claude.use?await claude.use("downloads"):null;
+    if(dl){await dl.save({filename:fn,data:blob});toast("备份已保存");return}}catch(e){if(e&&e.code=="declined")return}
+  try{const a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download=fn;document.body.appendChild(a);a.click();setTimeout(()=>{a.remove();URL.revokeObjectURL(a.href)},4000);toast("备份已保存到下载")}catch(e){toast("此环境无法导出，请换浏览器")}
+}
+function importMenu(){sheet("导入备份",`<div class="li"><div class="g s" style="color:var(--mute)">选择之前导出的 .json 备份文件。导入会替换当前所有商品、客户、订单和照片。</div></div><label class="opt fl">选择备份文件<input type="file" accept=".json,application/json" onchange="importData(this)"></label>`)}
+function importData(inp){
+  const f=inp.files&&inp.files[0];if(!f)return;
+  const r=new FileReader();
+  r.onload=async()=>{
+    let d;try{d=JSON.parse(r.result);if(d.app!="kaidanbao"||typeof d.ls!="string")throw 0}catch(e){toast("这不是有效的备份文件");return}
+    try{
+      localStorage.setItem(KEY,d.ls);
+      const db=await phDB();
+      await new Promise((ok,no)=>{const tx=db.transaction("ph","readwrite"),st=tx.objectStore("ph");st.clear();Object.keys(d.photos||{}).forEach(k=>st.put(d.photos[k],k));tx.oncomplete=ok;tx.onerror=()=>no(tx.error)});
+      cl();toast("导入成功，正在刷新…");setTimeout(()=>location.reload(),600);
+    }catch(e){toast("导入失败：存储空间不足或被禁用")}
+  };
+  r.readAsText(f);
+}
+var KEY="kaidanbao_v1";
+function persist(){try{localStorage.setItem(KEY,JSON.stringify({PR:PR.map(p=>{const q={...p};delete q.photo;return q}),CU,orders:S.orders,seq:S.seq,client:S.client,cart:S.cart,lo:S.lo,CATS}))}catch(e){if(!window._pw){window._pw=1;toast("存储空间已满，新数据可能没保存")}}}
+function resetAll(){sheet("清除所有商品、客户、订单和库存数据？",'<button class="opt" style="color:var(--red)" onclick="try{localStorage.removeItem(KEY)}catch(e){}try{indexedDB.deleteDatabase(\'kdb_photos\')}catch(e){}setTimeout(()=>location.reload(),300)">确认清除</button>')}
+try{const d=JSON.parse(localStorage.getItem(KEY)||"null");if(d){if(d.PR){PR.splice(0,PR.length,...d.PR);PR.forEach(p=>{if(p.photo)phSave(p.id,p.photo)})}if(d.CU)CU.splice(0,CU.length,...d.CU);S.orders=d.orders||[];S.seq=d.seq||S.seq;if(d.client)S.client=d.client;if(d.cart)S.cart=d.cart;if(d.lo)S.lo=d.lo;if(d.CATS)CATS=d.CATS}}catch(e){}
+render();phLoad();
+</script><script>if("serviceWorker" in navigator&&location.protocol=="https:"){addEventListener("load",()=>navigator.serviceWorker.register("sw.js").catch(()=>{}))}</script></body></html>
