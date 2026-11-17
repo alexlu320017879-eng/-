@@ -158,6 +158,18 @@ main{flex:1;overflow-y:auto;position:relative}
 .adjg{margin-left:auto;display:flex;border:2px solid var(--blue);border-radius:8px;overflow:hidden;width:min(58%,330px)}
 .adjg button{flex:1;border:0;background:none;color:var(--blue);font:inherit;font-size:22px;height:48px;min-width:0}.adjg button+button{border-left:2px solid var(--blue)}.adjg b{color:var(--ink);font-weight:500}
 .pbar{display:flex;border-top:1px solid var(--line)}.pbar button{flex:1;border:0;background:none;color:var(--red);font:inherit;font-size:22px;height:68px;display:flex;align-items:center;justify-content:center;gap:8px;cursor:pointer}.pbar button+button{border-left:1px solid var(--line)}.pbar svg{width:28px;height:28px}
+.drw-bg{position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:9}
+.drw{position:absolute;left:0;top:0;bottom:0;width:min(80%,330px);background:var(--card);padding:calc(env(safe-area-inset-top,0px) + 14px) 0 16px;overflow-y:auto;box-shadow:2px 0 16px rgba(0,0,0,.3)}
+.drw h3{margin:6px 18px 10px;font-size:20px}.drw .dh{color:var(--mute);font-size:14px;margin:12px 18px 4px}.dsep{height:1px;background:var(--line);margin:8px 0}
+.di{display:flex;align-items:center;gap:10px;width:100%;border:0;background:none;color:var(--ink);font:inherit;font-size:18px;padding:14px 18px;cursor:pointer;text-align:left}
+.di.on{background:var(--lblue);color:var(--blue);font-weight:600}.di span:first-of-type{flex:1}.di .c{color:var(--mute);font-size:15px;font-weight:400}.di svg{width:22px;height:22px}
+.cal{background:var(--card);padding:6px 8px 10px;border-bottom:1px solid var(--line)}
+.calh{display:flex;align-items:center;justify-content:space-between;padding:4px 4px 8px}.calh b{font-size:19px;cursor:pointer}.calh button{border:0;background:none;color:var(--ink);width:44px;height:44px;cursor:pointer}
+.cg{display:grid;grid-template-columns:repeat(7,1fr);gap:3px;text-align:center}.cg .wk{color:var(--mute);font-size:14px;padding:4px 0}
+.cg button{border:0;background:var(--bar);color:var(--ink);font:inherit;border-radius:8px;min-height:54px;padding:4px 0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;cursor:pointer}
+.cg button.e{background:none;cursor:default}.cg button b{font-weight:500;font-size:17px}.cg button small{font-size:11px;color:var(--blue);line-height:1.1}
+.cg button.has{background:var(--lblue)}.cg button.td b{color:var(--red)}.cg button.sel{background:var(--blue);color:#fff}.cg button.sel small,.cg button.sel b{color:#fff}
+.hsum{padding:8px 16px;color:var(--mute);font-size:14px;display:flex;justify-content:space-between;background:var(--bar)}
 @media print{html,body{height:auto!important;overflow:visible!important;display:block!important;background:#fff!important}body>*:not(#pg2){display:none!important}#pg2 .pg{position:static!important;display:block!important;background:#fff!important;padding:0!important}#pg2 .noprint{display:none!important}#pg2 .fb{overflow:visible!important}.docp{box-shadow:none!important;margin:0!important}}
 </style></head><body>
 <div id="top"></div><main id="main"></main><div id="foot"></div>
@@ -172,6 +184,7 @@ const I={
  folder:'<svg viewBox="0 0 24 24"><path d="M3 7a2 2 0 012-2h4l2 2h8a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2z"/></svg>',
  user:'<svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6"/></svg>',
  scan:'<svg viewBox="0 0 24 24"><path d="M4 8V5a1 1 0 011-1h3M16 4h3a1 1 0 011 1v3M20 16v3a1 1 0 01-1 1h-3M8 20H5a1 1 0 01-1-1v-3M8 12h8"/></svg>',
+ cal:'<svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg>',
  menu:'<svg viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16"/></svg>',
  tool:'<svg viewBox="0 0 24 24"><path d="M14 6a4 4 0 005 5l-9 9a2 2 0 01-3-3l9-9"/><path d="M5 5l4 4"/></svg>',
  lock:'<svg viewBox="0 0 24 24"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 018 0v3"/></svg>',
@@ -223,13 +236,13 @@ function render(keep){persist();
   $("tabs").innerHTML=T.map(([k,i,n])=>`<button data-t="${k}" class="${S.tab==k?'on':''}" onclick="tab('${k}')">${I[i]}${n}${k=="e"&&units()?`<span class="badge">${units()}</span>`:""}</button>`).join("");
   $("foot").innerHTML="";
   if(S.tab=="s"){
-    $("top").innerHTML=`<div class="srch" style="width:100%"><button onclick="openSearch()" style="text-align:left">${I.search}搜索货号</button><button onclick="listAll()">${I.grid}商品列表</button></div>`;
+    $("top").innerHTML=`<div class="srch" style="width:100%"><button onclick="openSearch()" style="text-align:left">${I.search}搜索货号</button><button onclick="listAll()">${I.grid}商品列表</button><button onclick="photoFind()" aria-label="拍照找货" style="flex:none;width:64px;padding:0;justify-content:center">${CAMI}</button></div>`;
     m.innerHTML="";
   }else if(S.tab=="e"){
     $("top").innerHTML=`<div class="top" style="width:100%;padding:0 10px;gap:6px"><button class="dd" onclick="sheet('单据类型',['销售单','报价单','退货单'].map(x=>'<button class=opt onclick=&quot;S.doc=\\''+x+'\\';cl();render()&quot;>'+x+'</button>').join(''))">${I.folder}${S.doc}</button><button class="dd" onclick="clientMenu()">${I.user}${S.client}</button><span class="sp"></span><button class="go" ${units()?"":"disabled"} onclick="cashier()">下单${units()?"("+units()+")":""}</button></div>`;
     const L=lines();
     m.innerHTML=L.length?cartHtml(L):
-     `<div class="empty"><p>购物车是空的，可用以下方式添加商品</p><button onclick="openSearch()">搜索</button><button onclick="scanIt()">扫码录货</button><button onclick="listAll()">商品列表</button></div>`;
+     `<div class="empty"><p>购物车是空的，可用以下方式添加商品</p><button onclick="openSearch()">搜索</button><button onclick="scanIt()">扫码录货</button><button onclick="listAll()">商品列表</button><button onclick="photoFind()">拍照找货</button></div>`;
     const CH2='<svg viewBox="0 0 24 24" width="22" style="color:var(--mute)"><path d="M9 5l7 7-7 7"/></svg>';
     const cnts=`<div class="cnt"><svg viewBox="0 0 24 24" width="22"><circle cx="12" cy="12" r="9" fill="currentColor" stroke="none"/><path d="M12 8v8M8 12h8" stroke="#fff"/></svg>${units()}</div><div class="cnt"><svg viewBox="0 0 24 24" width="22"><circle cx="12" cy="12" r="9" fill="currentColor" stroke="none"/><path d="M8 12h8" stroke="#fff"/></svg>0</div><div class="tot">${f2(net())}</div>`;
     const chev=`<button class="ico" aria-label="${S.open?'收起':'展开'}" onclick="S.open=!S.open;render(1)" style="transform:rotate(${S.open?180:0}deg)"><svg viewBox="0 0 24 24"><path d="M6 15l6-6 6 6"/></svg></button>`;
@@ -249,10 +262,7 @@ function render(keep){persist();
       <div class="pbar"><button onclick="clearAll()"><svg viewBox="0 0 24 24"><path d="M5 7h14M10 7V4h4v3M7 7l1 13h8l1-13"/></svg>清空</button><button onclick="toast('已刷新');render(1)"><svg viewBox="0 0 24 24"><path d="M20 12a8 8 0 11-3-6.2M20 4v5h-5"/></svg>刷新</button><button onclick="previewOrder()"><svg viewBox="0 0 24 24"><path d="M7 9V4h10v5M6 17H4v-7h16v7h-2M7 14h10v6H7z"/></svg>预览</button></div></div>`;
     }
   }else if(S.tab=="h"){
-    $("top").innerHTML=`<div class="hl" style="width:100%;padding:0"><button class="ico" aria-label="菜单">${I.menu}</button>${S.find?`<input id="hi" class="t" style="border:0;background:none;outline:0;color:var(--ink);font:inherit;font-size:18px" placeholder="单号或客户" value="${S.hq}" oninput="S.hq=this.value;render(1)">`:'<div class="t">最近三个月|销售单</div>'}<button class="ico" aria-label="搜索" onclick="S.find=!S.find;S.hq='';render()">${I.search}</button></div>`;
-    let o=S.orders.filter(x=>!S.hq||String(x.no).includes(S.hq)||x.cl.toLowerCase().includes(S.hq.toLowerCase()));
-    if(S.sort=="amt")o=[...o].sort((a,b)=>b.a-a.a);
-    m.innerHTML=`<button class="sortb" onclick="S.sort=S.sort=='def'?'amt':'def';render()">${S.sort=="def"?"默认排序":"按金额排序"}</button>`+(o.map(x=>`<div class="o" onclick="detail(${x.no})">${x.tax?'<div class="corner"></div>':''}<div class="stripe"></div><div class="g"><div class="no">#${x.no}</div><div class="cl">${x.cl}</div>${x.addr?`<div class="addr">${x.addr}</div>`:""}</div><div class="q">${x.u}</div><div class="rt"><div class="d">${x.d}</div><div class="a">${f2(x.a)}</div></div></div>`).join("")||'<div class="empty"><p>没有记录</p></div>');
+    histRender(m);
   }else{
     $("top").innerHTML=`<div class="top" style="width:100%;padding:0"><button class="ico" style="color:var(--ink)" aria-label="扫一扫" onclick="scanIt()">${I.scan}</button><div class="sp" style="text-align:center;font-size:21px;font-weight:600">更多</div><button class="ico" style="color:var(--ink)" aria-label="账户" onclick="toast('当前账户：演示')">${I.user}</button></div>`;
     const G=(a)=>`<div class="grid">${a.map(([i,n,fn])=>`<button onclick="${fn}">${I[i]}${n}</button>`).join("")}</div>`;
@@ -423,7 +433,7 @@ function readPhoto(inp){
 function bigPhoto(id){const p=P(id);if(p&&p.photo)sheet(esc(p.name)+" · "+esc(p.id),`<img src="${p.photo}" alt="" style="width:100%;display:block">`,"","关闭")}
 function prodPhoto(id){
   const p=P(id);
-  photoMenu(!!p.photo,d=>{p.photo=d;phSave(id,d);persist();prodSheet(id);render(1);toast("照片已保存")},`()=>{delete P('${id}').photo;phDel('${id}');persist();prodSheet('${id}');render(1)}`,p.photo?`bigPhoto('${id}')`:"");
+  photoMenu(!!p.photo,d=>{p.photo=d;phSave(id,d);phFeat(p);persist();prodSheet(id);render(1);toast("照片已保存")},`()=>{delete P('${id}').photo;delete P('${id}').f;phDel('${id}');persist();prodSheet('${id}');render(1)}`,p.photo?`bigPhoto('${id}')`:"");
 }
 function formPhoto(){photoMenu(!!F.photo,d=>{F.photo=d;fRender()},"()=>{F.photo='';fRender()}",F.photo?"fBig()":"")}
 function fBig(){sheet("",`<img src="${F.photo}" alt="" style="width:100%;display:block">`,"","关闭")}
@@ -443,6 +453,101 @@ function previewOrder(){
   if(!units()){toast("购物车是空的");return}
   const o={no:S.seq,cl:S.client,u:units(),d:new Date().toLocaleDateString("en-GB").slice(0,5),dt:new Date().toLocaleString("zh-CN"),a:net(),tax:S.tax,doc:S.doc,round:S.rnd||0,sub:+sub().toFixed(2),adj:+adj().toFixed(2),vat:+vat().toFixed(2),ship:S.ship,note:S.note,tag:S.tag,pay:[],owed:net(),L:lines().map(l=>({id:l.p.id,n:l.nm,cat:l.cat,c:l.c,q:l.q,pr:l.pr,amt:l.amt}))};
   $("pg2").innerHTML=`<div class="pg"><div class="top noprint" style="padding:0 8px"><button class="ico" style="color:var(--ink)" aria-label="返回" onclick="$('pg2').innerHTML=''">${BACK}</button><div style="flex:1;text-align:center;font-size:19px">订单预览</div><button class="go" style="background:#4a6cf7;padding:12px 18px" onclick="doPrint()">打印</button></div><div class="fb"><div class="docp">${docBody(o,"订单")}</div></div></div>`;
+}
+
+function loadImg(u){return new Promise((ok,no)=>{const im=new Image();im.onload=()=>ok(im);im.onerror=no;im.src=u})}
+async function featOf(u){
+  const im=await loadImg(u),N=48,c=document.createElement("canvas");c.width=c.height=N;const x=c.getContext("2d",{willReadFrequently:true});
+  const w=im.width,h=im.height,sz=Math.min(w,h)*.85;x.drawImage(im,(w-sz)/2,(h-sz)/2,sz,sz,0,0,N,N);
+  const d=x.getImageData(0,0,N,N).data,P=[],Vs=[],G=[];
+  for(let i=0;i<N*N;i++){const r=d[i*4]/255,g=d[i*4+1]/255,b=d[i*4+2]/255,mx=Math.max(r,g,b),mn=Math.min(r,g,b),df=mx-mn;let hh=0;
+    if(df>0){if(mx==r)hh=((g-b)/df+6)%6;else if(mx==g)hh=(b-r)/df+2;else hh=(r-g)/df+4}
+    P.push([hh*2,mx?df/mx:0,mx]);Vs.push(mx);G.push(.3*r+.59*g+.11*b)}
+  const sv=[...Vs].sort((a,b)=>a-b),p95=Math.max(.25,sv[Math.floor(sv.length*.95)]||1);
+  const H=new Array(16).fill(0),T=new Array(6).fill(0);let tw=0,tt=0;
+  for(let y=0;y<N;y++)for(let xx=0;xx<N;xx++){
+    const i=y*N+xx,cx=(xx-23.5)/24,cy=(y-23.5)/24,wt=Math.exp(-(cx*cx+cy*cy)/(2*.36)),[hb,sa,v]=P[i],vn=Math.min(1,v/p95);tw+=wt;
+    const wc=vn<.15?0:Math.max(0,Math.min(1,(sa-.1)/.2)),wn=wt*(1-wc),np=vn*3,n0=Math.min(2,Math.floor(np)),nf=np-n0;
+    H[n0]+=wn*(1-nf);H[n0+1]+=wn*nf;
+    if(wc>0){const i0=Math.floor(hb)%12,f=hb-Math.floor(hb);H[4+i0]+=wt*wc*(1-f);H[4+(i0+1)%12]+=wt*wc*f}
+    if(y>0&&xx>0&&y<N-1&&xx<N-1){const gm=(Math.abs(G[i+1]-G[i-1])+Math.abs(G[i+N]-G[i-N]))/Math.max(.25,p95);const bi=gm<.03?0:gm<.07?1:gm<.14?2:gm<.25?3:gm<.45?4:5;T[bi]+=wt;tt+=wt}}
+  return H.map(v=>Math.round(v/tw*255)).concat(T.map(v=>Math.round(v/(tt||1)*255)));
+}
+function featSim(a,b){let dc=0,dt=0;for(let i=0;i<16;i++)dc+=Math.abs(a[i]-b[i]);for(let i=16;i<22;i++)dt+=Math.abs(a[i]-b[i]);return 1-(.8*dc/510+.2*dt/510)}
+function phFeat(p){if(p&&p.photo)featOf(p.photo).then(f=>{p.f=f;persist()}).catch(()=>{})}
+function photoFind(){
+  PHC=u=>pfOpen(u);
+  sheet("拍照找货",`<div class="li"><div class="g s" style="color:var(--mute)">拍一张要找的衣服，我会按颜色和花纹，在已经拍过照片的商品里找最像的几个给你挑。</div></div><label class="opt fl">拍照<input type="file" accept="image/*" capture="environment" onchange="readPhoto(this)"></label><label class="opt fl">从相册选择<input type="file" accept="image/*" onchange="readPhoto(this)"></label>`);
+}
+async function pfOpen(u){
+  $("pg").innerHTML=`<div class="pg"><div class="top" style="padding:0 8px"><button class="ico" style="color:var(--ink)" aria-label="返回" onclick="closePg()">${BACK}</button><div style="flex:1;text-align:center;font-size:20px">拍照找货</div><button class="ico" style="color:var(--blue)" aria-label="重拍" onclick="closePg();photoFind()">${CAMI}</button></div><div class="fb" id="pfb"><div class="nf">正在对比…</div></div></div>`;
+  let out;
+  try{
+    const q=await featOf(u),ps=PR.filter(p=>p.photo);
+    for(const p of ps){if(!p.f){try{p.f=await featOf(p.photo)}catch(e){}}}
+    persist();
+    out={n:ps.length,no:PR.length-ps.length,r:ps.filter(p=>p.f).map(p=>({p,s:featSim(q,p.f)})).sort((a,b)=>b.s-a.s).slice(0,12)};
+  }catch(e){out=null}
+  const el=$("pfb");if(!el)return;
+  if(!out){el.innerHTML='<div class="nf">这张照片无法识别，请重拍</div>';return}
+  const top=`<div class="li"><img class="pth" style="width:84px;height:84px" src="${u}" alt=""><div class="g"><div class="n">你拍的这张</div><div class="s">在 ${out.n} 个有照片的商品里对比${out.no?`，另有 ${out.no} 个商品没有照片，找不到`:""}</div></div></div>`;
+  el.innerHTML=top+(out.r.length?out.r.map((x,i)=>`<div class="li" style="cursor:pointer" onclick="prodSheet('${x.p.id}')"><img class="pth" style="width:84px;height:84px" src="${x.p.photo}" alt=""><div class="g"><div class="n">${esc(x.p.name)}${x.p.cat?` <span class="pill">${esc(x.p.cat)}</span>`:""}</div><div class="s">货号 ${esc(x.p.id)} · 库存 ${x.p.v.reduce((a,v)=>a+v[1],0)}</div></div><div style="text-align:right"><div style="font-size:20px">${f2(x.p.price)}</div><div class="s" style="color:${i<3?"var(--blue)":"var(--mute)"}">匹配 ${Math.max(0,Math.round(x.s*100))}%</div></div></div>`).join(""):'<div class="nf">还没有带照片的商品，先给商品拍照</div>');
+}
+
+S.hr="m3";S.hdoc="全部";S.hv="list";
+const RANGES=[["today","今日"],["yest","昨天"],["month","本月"],["m3","最近三个月"],["m6","最近六个月"],["all","全部时间"]];
+function otime(o){
+  if(o.ts)return o.ts;
+  let m=o.dt&&String(o.dt).match(/(\d{4})\D+(\d{1,2})\D+(\d{1,2})(?:\D+(\d{1,2})\D+(\d{1,2}))?/);
+  if(m)return new Date(+m[1],+m[2]-1,+m[3],+(m[4]||12),+(m[5]||0)).getTime();
+  m=o.d&&String(o.d).match(/(\d{1,2})\D(\d{1,2})/);
+  if(m){const n=new Date();let t=new Date(n.getFullYear(),+m[2]-1,+m[1],12);if(t>n)t=new Date(n.getFullYear()-1,+m[2]-1,+m[1],12);return t.getTime()}
+  return 0;
+}
+function dayKey(t){const d=new Date(t);return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0")}
+function inRange(o,r){
+  const t=otime(o),n=new Date(),sd=new Date(n.getFullYear(),n.getMonth(),n.getDate()).getTime(),D=864e5;
+  switch(r){
+    case"today":return t>=sd;
+    case"yest":return t>=sd-D&&t<sd;
+    case"month":return t>=new Date(n.getFullYear(),n.getMonth(),1).getTime();
+    case"m3":return t>=new Date(n.getFullYear(),n.getMonth()-3,n.getDate()).getTime();
+    case"m6":return t>=new Date(n.getFullYear(),n.getMonth()-6,n.getDate()).getTime();
+    default:return true}
+}
+const docOk=o=>S.hdoc=="全部"||(o.doc||"销售单")==S.hdoc;
+const hq=o=>!S.hq||String(o.no).includes(S.hq)||String(o.cl).toLowerCase().includes(S.hq.toLowerCase());
+function orderRow(x){return `<div class="o" onclick="detail(${x.no})">${x.tax?'<div class="corner"></div>':''}<div class="stripe"></div><div class="g"><div class="no">#${x.no}${x.doc&&x.doc!="销售单"?`<span class="pill">${esc(x.doc)}</span>`:""}</div><div class="cl">${esc(x.cl=="Client tmp"?"散客":x.cl)}</div>${x.addr?`<div class="addr">${esc(x.addr)}</div>`:""}</div><div class="q">${x.u}</div><div class="rt"><div class="d">${esc(x.d)}</div><div class="a">${f2(x.a)}</div></div></div>`}
+function histTop(title){
+  return `<div class="hl" style="width:100%;padding:0"><button class="ico" aria-label="菜单" onclick="histMenu()">${I.menu}</button>${S.find&&S.hv!="cal"?`<input id="hi" class="t" style="border:0;background:none;outline:0;color:var(--ink);font:inherit;font-size:18px;min-width:0" placeholder="单号或客户" value="${esc(S.hq)}" oninput="S.hq=this.value;render(1)">`:`<div class="t">${title}</div>`}<button class="ico" aria-label="日历" style="${S.hv=="cal"?"color:var(--blue)":""}" onclick="${S.hv=="cal"?"setRange(S.hr)":"openCal()"}">${I.cal}</button>${S.hv=="cal"?"":`<button class="ico" aria-label="搜索" onclick="S.find=!S.find;S.hq='';render()">${I.search}</button>`}</div>`;
+}
+function histRender(m){
+  if(S.hv=="cal"){calRender(m);return}
+  const rn=(RANGES.find(r=>r[0]==S.hr)||RANGES[3])[1];
+  $("top").innerHTML=histTop(rn+"|"+(S.hdoc=="全部"?"全部单据":S.hdoc));
+  let o=S.orders.filter(x=>inRange(x,S.hr)&&docOk(x)&&hq(x));
+  if(S.sort=="amt")o=[...o].sort((a,b)=>b.a-a.a);
+  const sum=o.reduce((a,x)=>a+x.a,0);
+  m.innerHTML=`<button class="sortb" onclick="S.sort=S.sort=='def'?'amt':'def';render()">${S.sort=="def"?"默认排序":"按金额排序"}</button><div class="hsum"><span>共 ${o.length} 单</span><span>合计 ${f2(sum)}</span></div>`+(o.map(orderRow).join("")||'<div class="empty"><p>这个时间段没有记录</p></div>');
+}
+function histMenu(){
+  const cnt=r=>S.orders.filter(x=>inRange(x,r)&&docOk(x)).length;
+  $("ov").innerHTML=`<div class="drw-bg" onclick="if(event.target==this)cl()"><div class="drw"><h3>开单记录</h3>${RANGES.map(([k,n])=>`<button class="di ${S.hv!="cal"&&S.hr==k?"on":""}" onclick="setRange('${k}')"><span>${n}</span><span class="c">${cnt(k)}</span></button>`).join("")}<div class="dsep"></div><button class="di ${S.hv=="cal"?"on":""}" onclick="openCal()">${I.cal}<span>日历</span></button><div class="dsep"></div><div class="dh">单据类型</div>${["全部","销售单","报价单","退货单"].map(t=>`<button class="di ${S.hdoc==t?"on":""}" onclick="S.hdoc='${t}';cl();render()"><span>${t}</span></button>`).join("")}</div></div>`;
+}
+function setRange(k){S.hr=k;S.hv="list";S.find=false;S.hq="";cl();render()}
+function openCal(){const n=new Date();S.hv="cal";S.cy=n.getFullYear();S.cm=n.getMonth();S.cd=dayKey(Date.now());cl();render()}
+function calGo(d){let y=S.cy,mo=S.cm+d;while(mo<0){mo+=12;y--}while(mo>11){mo-=12;y++}S.cy=y;S.cm=mo;render(1)}
+function calPick(k){S.cd=k;render(1)}
+function calRender(m){
+  const n=new Date();if(S.cy==null){S.cy=n.getFullYear();S.cm=n.getMonth()}if(!S.cd)S.cd=dayKey(Date.now());
+  $("top").innerHTML=histTop("日历");
+  const y=S.cy,mo=S.cm,off=(new Date(y,mo,1).getDay()+6)%7,nd=new Date(y,mo+1,0).getDate(),tk=dayKey(Date.now()),map={};
+  S.orders.filter(docOk).forEach(x=>{const k=dayKey(otime(x));(map[k]=map[k]||{n:0,s:0});map[k].n++;map[k].s+=x.a});
+  let cells=["一","二","三","四","五","六","日"].map(w=>`<div class="wk">${w}</div>`).join("")+'<button class="e" disabled></button>'.repeat(off);
+  for(let d=1;d<=nd;d++){const k=y+"-"+String(mo+1).padStart(2,"0")+"-"+String(d).padStart(2,"0"),e=map[k];
+    cells+=`<button class="${e?"has":""} ${k==tk?"td":""} ${k==S.cd?"sel":""}" onclick="calPick('${k}')"><b>${d}</b>${e?`<small>${e.n}单</small>`:""}</button>`}
+  const day=S.orders.filter(x=>docOk(x)&&dayKey(otime(x))==S.cd).sort((a,b)=>otime(b)-otime(a)),sum=day.reduce((a,x)=>a+x.a,0),[,cm,cdd]=S.cd.split("-");
+  m.innerHTML=`<div class="cal"><div class="calh"><button aria-label="上个月" onclick="calGo(-1)"><svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></button><b onclick="openCal()">${y}年${mo+1}月</b><button aria-label="下个月" onclick="calGo(1)"><svg viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></svg></button></div><div class="cg">${cells}</div></div><div class="hsum"><span>${+cm}月${+cdd}日 · ${day.length} 单</span><span>合计 ${f2(sum)}</span></div>`+(day.map(orderRow).join("")||'<div class="empty"><p>这一天没有开单</p></div>');
 }
 const PM=["Bank","Cash","CONTRA REMBOLSO"];
 let K=null;
@@ -502,7 +607,7 @@ function kDone(){
   const due=kDue();
   if(due<-0.005){toast("付款金额超过订单金额");return}
   
-  const o={no:S.seq++,cl:S.client,u:units(),d:new Date().toLocaleDateString("en-GB").slice(0,5),dt:new Date().toLocaleString("zh-CN"),
+  const o={no:S.seq++,cl:S.client,u:units(),d:new Date().toLocaleDateString("en-GB").slice(0,5),dt:new Date().toLocaleString("zh-CN"),ts:Date.now(),
     a:+(tot()-K.round).toFixed(2),tax:S.tax,doc:S.doc,round:K.round,sub:+sub().toFixed(2),adj:+adj().toFixed(2),ship:S.ship,note:S.note,tag:S.tag,vat:+vat().toFixed(2),
     pay:PM.filter(m=>K.pay[m]).map(m=>[m,K.pay[m]]),owed:due>0.005?due:0,
     L:lines().map(l=>({id:l.p.id,n:l.nm,cat:l.cat,c:l.c,q:l.q,pr:l.pr,amt:l.amt}))};
@@ -612,7 +717,7 @@ function fSave(cont){
   if(!(parseInt(F.pack)>=1)){toast("包装数至少为 1");return}
   let uid=id,n=1;while(PR.some(p=>p.id.toLowerCase()==uid.toLowerCase()))uid=id+"-"+(++n);
   PR.push({id:uid,name:id,cat:F.cat,photo:F.photo||undefined,price:parseFloat(String(F.price).replace(",","."))||0,v:F.colors.length?F.colors.map(c=>[c[0],c[1]]):[["默认",parseInt(F.stock)||0]]});
-  if(F.photo)phSave(uid,F.photo);
+  if(F.photo){phSave(uid,F.photo);phFeat(PR.find(x=>x.id==uid))}
   if(cont){newForm.call(null);F.code="";fRender();toast(uid!=id?"货号重复，已存为 "+uid:"已保存，继续新建")}
   else{toast(uid!=id?"货号重复，已存为 "+uid:"商品已保存");closePg();tab("s")}
 }
@@ -661,7 +766,7 @@ function importData(inp){
   r.readAsText(f);
 }
 var KEY="kaidanbao_v1";
-function persist(){try{localStorage.setItem(KEY,JSON.stringify({PR:PR.map(p=>{const q={...p};delete q.photo;return q}),CU,orders:S.orders,seq:S.seq,client:S.client,cart:S.cart,lo:S.lo,CATS,X:{adjP:S.adjP,adjA:S.adjA,ship:S.ship,rnd:S.rnd,note:S.note,tag:S.tag,shm:S.shm}}))}catch(e){if(!window._pw){window._pw=1;toast("存储空间已满，新数据可能没保存")}}}
+function persist(){try{localStorage.setItem(KEY,JSON.stringify({PR:PR.map(p=>{const q={...p};delete q.photo;return q}),CU,orders:S.orders,seq:S.seq,client:S.client,cart:S.cart,lo:S.lo,CATS,X:{adjP:S.adjP,adjA:S.adjA,ship:S.ship,rnd:S.rnd,note:S.note,tag:S.tag,shm:S.shm,hr:S.hr,hdoc:S.hdoc,hv:S.hv}}))}catch(e){if(!window._pw){window._pw=1;toast("存储空间已满，新数据可能没保存")}}}
 function resetAll(){sheet("清除所有商品、客户、订单和库存数据？",'<button class="opt" style="color:var(--red)" onclick="try{localStorage.removeItem(KEY)}catch(e){}try{indexedDB.deleteDatabase(\'kdb_photos\')}catch(e){}setTimeout(()=>location.reload(),300)">确认清除</button>')}
 try{const d=JSON.parse(localStorage.getItem(KEY)||"null");if(d){if(d.PR){PR.splice(0,PR.length,...d.PR);PR.forEach(p=>{if(p.photo)phSave(p.id,p.photo)})}if(d.CU)CU.splice(0,CU.length,...d.CU);S.orders=d.orders||[];S.seq=d.seq||S.seq;if(d.client)S.client=d.client;if(d.cart)S.cart=d.cart;if(d.lo)S.lo=d.lo;if(d.CATS)CATS=d.CATS;if(d.X)Object.assign(S,d.X)}}catch(e){}
 render();phLoad();
