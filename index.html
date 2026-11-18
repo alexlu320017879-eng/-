@@ -170,6 +170,37 @@ main{flex:1;overflow-y:auto;position:relative}
 .cg button.e{background:none;cursor:default}.cg button b{font-weight:500;font-size:17px}.cg button small{font-size:11px;color:var(--blue);line-height:1.1}
 .cg button.has{background:var(--lblue)}.cg button.td b{color:var(--red)}.cg button.sel{background:var(--blue);color:#fff}.cg button.sel small,.cg button.sel b{color:#fff}
 .hsum{padding:8px 16px;color:var(--mute);font-size:14px;display:flex;justify-content:space-between;background:var(--bar)}
+
+@page{size:A4;margin:0}
+.docp{background:none!important;box-shadow:none!important;margin:0!important;padding:6px 0!important;border-radius:0!important;font-size:inherit;line-height:normal;color:#000}
+.a4{position:relative;width:210mm;height:296mm;margin:0 auto 10px;background:#fff;color:#000;box-sizing:border-box;padding:13mm 11mm 10mm;font-family:Arial,Helvetica,"Noto Sans SC","PingFang SC",sans-serif;font-size:9pt;line-height:1.25;box-shadow:0 1px 6px rgba(0,0,0,.3);overflow:hidden;zoom:var(--z,1);-webkit-print-color-adjust:exact;print-color-adjust:exact}
+.a4 *{box-sizing:border-box}
+.a4 .tt1{text-align:right;font-weight:700;font-size:28pt;line-height:1.1}
+.a4 .dt1{text-align:right;font-size:9pt;margin-top:1mm}
+.a4 .no1{text-align:right;font-weight:700;font-size:11pt;margin-top:3mm}
+.a4 .hd{display:flex;justify-content:space-between;gap:6mm;margin-top:4mm}
+.a4 .hl1{flex:1;min-width:0;font-size:9.5pt}
+.a4 .hl1 b.nm0{font-size:13pt;display:block;margin-bottom:1mm}
+.a4 .lb{font-size:9pt;margin:5mm 0 1mm}
+.a4 .bx{border:1px solid #000;padding:1.5mm 2mm;font-size:9pt;overflow:hidden;white-space:pre-wrap}
+.a4 .cb{width:46%;border:1px solid #000;padding:2mm 3mm;font-size:10.5pt;line-height:1.55}
+.a4 .cb .nm{font-weight:700;font-size:12.5pt}
+.a4 table.it{width:100%;border-collapse:collapse;table-layout:fixed;margin-top:4mm}
+.a4 table.it th{border:1.4px solid #000;padding:2mm 1.5mm 1.2mm;font-size:9.5pt;font-weight:700;text-align:left;white-space:nowrap}
+.a4 table.it td{padding:.9mm 1.5mm;font-size:9pt;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.a4 .c1{width:19%}.a4 .c2{width:28%}.a4 .c3{width:13%;text-align:center!important}.a4 .c4{width:11%;text-align:center!important}.a4 .c5{width:14%;text-align:right!important}.a4 .c6{width:15%;text-align:right!important}
+.a4 .ft{position:absolute;left:11mm;right:11mm;bottom:17mm}
+.a4 .fg{display:grid;grid-auto-flow:column;grid-template-rows:8.5mm 8.5mm;border:1px solid #000}
+.a4 .fg>div{border-right:1px solid #000;padding:1mm 1.5mm;font-size:9.5pt}.a4 .fg>div:last-child{border-right:0}
+.a4 .fg .f1{grid-row:1;font-size:10.5pt;border-bottom:1px solid #000}.a4 .fg .f2{grid-row:2;font-size:9pt}
+.a4 .fg .fc{grid-row:1/3;display:flex;flex-direction:column;align-items:center;justify-content:space-between;text-align:center;padding:1.2mm 1mm}
+.a4 .fg .fc span{font-size:8pt}.a4 .fg .fc b{font-size:12pt;font-weight:500}.a4 .fg .fc.tot b{font-weight:700;font-size:13pt}.a4 .fg .fc i{font-style:normal;font-size:8pt}
+.a4 .eb{height:24mm;border:1px solid #000;border-top:0}
+.a4 .pgn{position:absolute;left:11mm;right:11mm;bottom:8mm;display:flex;justify-content:space-between;font-size:9pt}
+.a4 .tot2{position:absolute;right:11mm;bottom:17mm;font-size:12pt;font-weight:700}
+.a4 .kv{display:flex;gap:4mm;border-bottom:1px solid #999;padding:2.2mm 0;font-size:11pt}.a4 .kv span{width:42mm;color:#444}
+.a4 .sg{height:34mm;border:1px solid #000;margin-top:6mm;padding:2mm;font-size:9pt}
+@media print{html,body{max-width:none!important;width:auto!important;margin:0!important;padding:0!important}#pg2 .pg{max-width:none!important;width:auto!important;margin:0!important;position:static!important}.a4{zoom:1!important;box-shadow:none!important;margin:0!important;break-after:page;page-break-after:always}.a4:last-child{break-after:auto;page-break-after:auto}.docp{padding:0!important}}
 @media print{html,body{height:auto!important;overflow:visible!important;display:block!important;background:#fff!important}body>*:not(#pg2){display:none!important}#pg2 .pg{position:static!important;display:block!important;background:#fff!important;padding:0!important}#pg2 .noprint{display:none!important}#pg2 .fb{overflow:visible!important}.docp{box-shadow:none!important;margin:0!important}}
 </style></head><body>
 <div id="top"></div><main id="main"></main><div id="foot"></div>
@@ -269,7 +300,7 @@ function render(keep){persist();
     m.innerHTML=`<div class="ban">想让客户在电脑上自己下单？<b>开通网页下单入口</b>演示横幅，可自行替换</div>
      <div class="sec">管理</div>${G([["tool","清除数据","resetAll()"],["sync","导出备份","exportData()"],["lock","导入备份","importMenu()"]])}
      <div class="sec">工具</div>${G([["tag","新建商品","newP()"],["scan","扫一扫","scanIt()"],["card","种类管理","catManage()"]])}
-     <div class="sec">服务</div>${G([["help","帮助中心","toast('帮助中心')"]])}
+     <div class="sec">服务</div>${G([["card","公司资料","coPage()"],["help","帮助中心","toast('帮助中心')"]])}
      <div class="sec">其他</div>${G([["ver","标准版","toast('版本 1.0.0')"],["net","网络检测","toast('网络正常')"]])}`;
   }
   if(keep)m.scrollTop=sc;
@@ -283,7 +314,29 @@ const CHV='<svg viewBox="0 0 24 24" width="20" style="color:var(--mute)"><path d
 function closeAll(){$("pg").innerHTML="";$("pg2").innerHTML="";F=C=AD=LK=null;render(1)}
 function clientMenu(){
   const it=(ic,t,fn)=>`<button class="pm" onclick="${fn}">${I[ic]}${t}</button>`;
-  $("ov").innerHTML=`<div class="sheet" style="background:transparent;align-items:flex-start;justify-content:flex-start" onclick="if(event.target==this)cl()"><div class="pop">${it("user",esc(S.client),"cl()")}${it("search","搜索客户","cl();cuSearch()")}${it("scan","扫描名片","cl();toast('演示版暂不支持相机扫描')")}${it("plus","创建客户","cl();lkOpen()")}</div></div>`;
+  $("ov").innerHTML=`<div class="sheet" style="background:transparent;align-items:flex-start;justify-content:flex-start" onclick="if(event.target==this)cl()"><div class="pop">${it("user",esc(S.client),"cl()")}${it("search","搜索客户","cl();cuSearch()")}${it("scan","扫描名片","cl();toast('演示版暂不支持相机扫描')")}${it("plus","创建客户","cl();lkOpen()")}${CU.some(c=>c.name==S.client)?it("edit","编辑客户资料","cl();editC()"):""}</div></div>`;
+}
+let CO=null;
+function coPage(){
+  CO={...S.co,invno:String(S.invSeq)};
+  $("pg").innerHTML=`<div class="pg">${hdrP("公司资料（打印单据用）","closeAll()","coSave()")}<div class="fb">
+  <div class="rw"><div class="l">公司名称</div>${inp("CO","name")}</div>
+  <div class="rw"><div class="l">地址</div>${inp("CO","addr1")}</div>
+  <div class="rw"><div class="l">邮编城市</div>${inp("CO","addr2")}</div>
+  <div class="rw"><div class="l">国家</div>${inp("CO","country")}</div>
+  <div class="rw"><div class="l">电话</div>${inp("CO","tel","","tel")}</div>
+  <div class="rw"><div class="l">邮箱</div>${inp("CO","email","","email")}</div>
+  <div class="rw"><div class="l">NIF/CIF</div>${inp("CO","nif")}</div>
+  <div class="rw"><div class="l">IBAN</div>${inp("CO","iban")}</div>
+  <div class="gap"></div>
+  <div class="rw"><div class="l">业务员</div>${inp("CO","seller")}</div>
+  <div class="rw"><div class="l">下一张发票号</div>${inp("CO","invno","","numeric")}</div>
+  </div></div>`;
+}
+function coSave(){const{invno,...c}=CO;S.co=c;const n=parseInt(invno);if(n>0)S.invSeq=n;persist();closeAll();toast("公司资料已保存")}
+function editC(){
+  const i=CU.findIndex(c=>c.name==S.client);if(i<0)return;
+  C={disc:"",debt:true,limit:"",zone:"未选择",name:"",pre:"",tel:"",land:"",note:"",country:"未选择",tax:"",vat:"",company:"",mail:"",addr:"",zip:"",city:"",addrs:[],...CU[i],tab:0,ei:i};cRender();
 }
 function cuSearch(){
   $("pg").innerHTML=`<div class="pg"><div class="top" style="gap:0;padding:0 8px"><button class="ico" style="color:var(--ink)" aria-label="返回" onclick="closeAll()">${BACK}</button><input id="cq" class="sqi" style="border:0;margin-left:8px" placeholder="搜索客户" oninput="cuBody(this.value)"></div><div id="cb" class="spb"></div></div>`;
@@ -316,7 +369,7 @@ function cNew(){
 function cNote(){dlg("备注（最长250个字符）",C.note,n=>{C.note=n.slice(0,250);cRender()})}
 function cRender(){
   const t=C.tab;
-  const head=hdrP("新建客户","closeAll()","cSave()")+`<div class="seg"><button class="${t==0?'on':''}" onclick="C.tab=0;cRender()">基本资料</button><button class="${t==1?'on':''}" onclick="C.tab=1;cRender()">收货地址</button></div>`;
+  const head=hdrP(C.ei!=null?"编辑客户":"新建客户","closeAll()","cSave()")+`<div class="seg"><button class="${t==0?'on':''}" onclick="C.tab=0;cRender()">基本资料</button><button class="${t==1?'on':''}" onclick="C.tab=1;cRender()">收货地址</button></div>`;
   let body;
   if(t==0){
     body=`<div class="rw" style="min-height:130px"><div class="l">头像</div><span style="flex:1"></span><button class="cam" aria-label="上传头像" onclick="toast('演示版暂不支持拍照')"><svg viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M9 4l-1.5 2H5a2 2 0 00-2 2v10a2 2 0 002 2h14a2 2 0 002-2V8a2 2 0 00-2-2h-2.5L15 4zM12 9a4 4 0 110 8 4 4 0 010-8z"/></svg></button></div>
@@ -345,7 +398,9 @@ function cRender(){
 }
 function cSave(){
   if(!C.name.trim()){C.tab=0;cRender();toast("请填写名字");return}
-  CU.push({name:C.name.trim()});S.client=C.name.trim();closeAll();toast("客户已创建");
+  const e={...C};delete e.tab;delete e.ei;e.name=C.name.trim();
+  if(C.ei!=null){const old=CU[C.ei];if(old&&S.client==old.name)S.client=e.name;CU[C.ei]=e}else{CU.push(e);S.client=e.name}
+  const wasEdit=C.ei!=null;closeAll();toast(wasEdit?"客户已保存":"客户已创建");
 }
 /* step 3: new address */
 function aNew(){AD={name:"",pre:"",tel:"",addr:"",zip:"",city:"",country:"未选择",def:true,sync:true};aRender()}
@@ -451,8 +506,8 @@ function clearAll(){sheet("清空这一单的所有商品和调整？",`<button 
 function clearDo(){S.cart={};S.lo={};S.fold={};S.adjP=S.adjA=0;S.ship=null;S.rnd=0;S.note=S.tag="";S.open=false;cl();render(1)}
 function previewOrder(){
   if(!units()){toast("购物车是空的");return}
-  const o={no:S.seq,cl:S.client,u:units(),d:new Date().toLocaleDateString("en-GB").slice(0,5),dt:new Date().toLocaleString("zh-CN"),a:net(),tax:S.tax,doc:S.doc,round:S.rnd||0,sub:+sub().toFixed(2),adj:+adj().toFixed(2),vat:+vat().toFixed(2),ship:S.ship,note:S.note,tag:S.tag,pay:[],owed:net(),L:lines().map(l=>({id:l.p.id,n:l.nm,cat:l.cat,c:l.c,q:l.q,pr:l.pr,amt:l.amt}))};
-  $("pg2").innerHTML=`<div class="pg"><div class="top noprint" style="padding:0 8px"><button class="ico" style="color:var(--ink)" aria-label="返回" onclick="$('pg2').innerHTML=''">${BACK}</button><div style="flex:1;text-align:center;font-size:19px">订单预览</div><button class="go" style="background:#4a6cf7;padding:12px 18px" onclick="doPrint()">打印</button></div><div class="fb"><div class="docp">${docBody(o,"订单")}</div></div></div>`;
+  const o={no:S.seq,cl:S.client,u:units(),d:new Date().toLocaleDateString("en-GB").slice(0,5),dt:new Date().toLocaleString("zh-CN"),a:net(),tax:S.tax,doc:S.doc,round:S.rnd||0,sub:+sub().toFixed(2),adj:+adj().toFixed(2),vat:+vat().toFixed(2),ship:S.ship,note:S.note,tag:S.tag,adjP:S.adjP||0,adjA:S.adjA||0,pv:1,cd:CU.find(c=>c.name==S.client)||{name:S.client},pay:[],owed:net(),L:lines().map(l=>({id:l.p.id,n:l.nm,cat:l.cat,c:l.c,q:l.q,pr:l.pr,amt:l.amt}))};
+  $("pg2").innerHTML=`<div class="pg"><div class="top noprint" style="padding:0 8px"><button class="ico" style="color:var(--ink)" aria-label="返回" onclick="$('pg2').innerHTML=''">${BACK}</button><div style="flex:1;text-align:center;font-size:19px">订单预览</div><button class="go" style="background:#4a6cf7;padding:12px 18px" onclick="doPrint()">打印</button></div><div class="fb">${docWrap(o,"订单")}</div></div>`;
 }
 
 function loadImg(u){return new Promise((ok,no)=>{const im=new Image();im.onload=()=>ok(im);im.onerror=no;im.src=u})}
@@ -495,6 +550,7 @@ async function pfOpen(u){
 }
 
 S.hr="m3";S.hdoc="全部";S.hv="list";
+S.invSeq=4842;S.co={name:"SOFIA STYLE S.L",addr1:"Poligono tecnologico nave 18",addr2:"18151 OGÍJARES  GRANADA",country:"Spain",tel:"+34-958374280",email:"",nif:"B-19638568",iban:"",seller:"s3"};
 const RANGES=[["today","今日"],["yest","昨天"],["month","本月"],["m3","最近三个月"],["m6","最近六个月"],["all","全部时间"]];
 function otime(o){
   if(o.ts)return o.ts;
@@ -608,7 +664,7 @@ function kDone(){
   if(due<-0.005){toast("付款金额超过订单金额");return}
   
   const o={no:S.seq++,cl:S.client,u:units(),d:new Date().toLocaleDateString("en-GB").slice(0,5),dt:new Date().toLocaleString("zh-CN"),ts:Date.now(),
-    a:+(tot()-K.round).toFixed(2),tax:S.tax,doc:S.doc,round:K.round,sub:+sub().toFixed(2),adj:+adj().toFixed(2),ship:S.ship,note:S.note,tag:S.tag,vat:+vat().toFixed(2),
+    a:+(tot()-K.round).toFixed(2),tax:S.tax,doc:S.doc,round:K.round,sub:+sub().toFixed(2),adj:+adj().toFixed(2),ship:S.ship,note:S.note,tag:S.tag,adjP:S.adjP||0,adjA:S.adjA||0,cd:JSON.parse(JSON.stringify(CU.find(c=>c.name==S.client)||{name:S.client})),vat:+vat().toFixed(2),
     pay:PM.filter(m=>K.pay[m]).map(m=>[m,K.pay[m]]),owed:due>0.005?due:0,
     L:lines().map(l=>({id:l.p.id,n:l.nm,cat:l.cat,c:l.c,q:l.q,pr:l.pr,amt:l.amt}))};
   S.orders.unshift(o);
@@ -619,31 +675,67 @@ function kDone(){
 function okRender(no){
   const o=S.orders.find(x=>x.no==no);
   const pay=o.pay&&o.pay.length?o.pay.map(p=>p[0]+"("+f2(p[1])+")").join(", "):"";
-  $("pg").innerHTML=`<div class="pg"><div class="top" style="padding:0 6px 0 16px"><div style="flex:1;font-size:21px;font-weight:600">#${o.no}</div><button class="ico" style="color:var(--ink)" aria-label="保存为 PDF" onclick="docOpen(${o.no},'订单')">${SVG.pdf}</button><button class="ico" style="color:var(--ink)" aria-label="复制单据" onclick="copyDoc(${o.no})">${SVG.link}</button><button class="ico" style="color:var(--ink)" aria-label="分享" onclick="shareDoc(${o.no})">${SVG.share}</button></div><div class="fb" style="padding:26px 14px"><div class="okc">${SVG.chk}</div><div style="color:#6fcf9f;font-size:22px;text-align:center;margin:12px 0 26px">成功</div><div class="card"><div class="cr"><span>客户:</span><b style="font-weight:400">${esc(o.cl)}</b></div><div class="cr"><span>总金额:</span><b style="font-weight:400">${f2(o.a)}</b></div><div class="cr"><span>支付方式:</span><b style="font-weight:400">${esc(pay)}</b></div><div class="cr"><span>欠款:</span><b style="font-weight:400">${f2(o.owed||0)}</b></div><div class="cr"><span>运输方式:</span></div><div class="cr"><span>备注:</span></div></div><div style="display:flex;gap:14px;margin:18px 0"><button class="ob" onclick="printMenu(${o.no})">打印</button><button class="ob" onclick="closeAll();tab('h')">历史</button></div><button class="bot" style="border-radius:6px;background:#4a6cf7" onclick="nextCust()">下一位客户</button></div></div>`;
+  $("pg").innerHTML=`<div class="pg"><div class="top" style="padding:0 6px 0 16px"><div style="flex:1;font-size:21px;font-weight:600">#${o.no}</div><button class="ico" style="color:var(--ink)" aria-label="保存为 PDF" onclick="docOpen(${o.no},'订单')">${SVG.pdf}</button><button class="ico" style="color:var(--ink)" aria-label="复制单据" onclick="copyDoc(${o.no})">${SVG.link}</button><button class="ico" style="color:var(--ink)" aria-label="分享" onclick="shareDoc(${o.no})">${SVG.share}</button></div><div class="fb" style="padding:26px 14px"><div class="okc">${SVG.chk}</div><div style="color:#6fcf9f;font-size:22px;text-align:center;margin:12px 0 26px">成功</div><div class="card"><div class="cr"><span>客户:</span><b style="font-weight:400">${esc(o.cl)}</b></div><div class="cr"><span>总金额:</span><b style="font-weight:400">${f2(o.a)}</b></div><div class="cr"><span>支付方式:</span><b style="font-weight:400">${esc(pay)}</b></div><div class="cr"><span>欠款:</span><b style="font-weight:400">${f2(o.owed||0)}</b></div><div class="cr"><span>运输方式:</span><b style="font-weight:400">${o.ship?esc(o.ship.m)+(o.ship.fee?" ("+f2(o.ship.fee)+")":""):""}</b></div><div class="cr"><span>备注:</span><b style="font-weight:400">${esc(o.note||"")}</b></div></div><div style="display:flex;gap:14px;margin:18px 0"><button class="ob" onclick="printMenu(${o.no})">打印</button><button class="ob" onclick="closeAll();tab('h')">历史</button></div><button class="bot" style="border-radius:6px;background:#4a6cf7" onclick="nextCust()">下一位客户</button></div></div>`;
 }
 function nextCust(){S.client="Client tmp";S.doc="销售单";closeAll();tab("e")}
 function printMenu(no){sheet("打印",["订单","路单","配货单","发票"].map(t=>`<button class="opt" onclick="cl();docOpen(${no},'${t}')">${t}</button>`).join(""))}
 const mny=n=>f2(+n||0);
-function docBody(o,t){
-  const L=o.L||[],cust=o.cl=="Client tmp"?"散客":o.cl;
-  const tbl=(cols,rows)=>`<table class="dt"><tr>${cols.map(c=>`<th>${c}</th>`).join("")}</tr>${rows.map(r=>`<tr>${r.map(c=>`<td>${c}</td>`).join("")}</tr>`).join("")}</table>`;
-  const head=`<div style="display:flex;justify-content:space-between"><b style="font-size:20px">示例公司</b><span>${esc(o.dt||o.d)}</span></div><div style="font-size:22px;font-weight:700;margin:10px 0 2px">${t} #${o.no}</div><div>客户：${esc(cust)}</div>${o.tag?`<div>标签：${esc(o.tag)}</div>`:""}${o.note?`<div>备注：${esc(o.note)}</div>`:""}`;
-  const items=tbl(["商品","数量","单价","金额"],L.map(l=>[esc(l.n)+"<br><small>"+(l.cat?esc(l.cat)+" · ":"")+esc(l.c)+"</small>",l.q,mny(l.pr),mny(l.amt)]));
-  const paid=(o.pay||[]).reduce((a,p)=>a+p[1],0);
-  let b;
-  if(t=="订单")b=items+`<div class="tt">小计 ${mny(o.sub!=null?o.sub:o.a)}<br>${o.adj?"调价 "+mny(o.adj)+"<br>":""}${o.ship?"运费 "+mny(o.ship.fee)+" ("+esc(o.ship.m)+")<br>":""}税 21% ${mny(o.vat)}<br>抹零 ${mny(o.round)}<br><b style="font-size:18px">合计 ${mny(o.a)}</b><br>已付 ${mny(paid)}<br>欠款 ${mny(o.owed)}</div>`;
-  else if(t=="发票")b=items+`<div class="tt">税基 ${mny(o.sub!=null?o.sub:o.a)}<br>增值税 21% ${mny(o.vat)}<br><b style="font-size:18px">发票合计 ${mny(o.a)}</b></div>`;
-  else if(t=="配货单")b=tbl(["货号","商品 / 颜色","数量","已拣"],L.map(l=>[esc(l.id||""),esc(l.n)+" "+esc(l.c),l.q,"☐"]))+`<div class="tt">共 ${o.u} 件</div>`;
-  else b=tbl(["商品","数量"],L.map(l=>[esc(l.n)+" "+esc(l.c),l.q]))+`<div>总件数：<b>${o.u}</b></div><div style="margin-top:14px">收货地址：________________________</div><div style="margin-top:14px">承运：________________________</div><div style="margin-top:14px">备注：________________________</div><div style="margin-top:34px">签收：________________________</div>`;
-  return head+b;
+const CNAME={"中国":"CHINA","西班牙":"SPAIN","法国":"FRANCE","意大利":"ITALY","葡萄牙":"PORTUGAL","德国":"GERMANY"};
+const pad2=n=>String(n).padStart(2,"0");
+function dstr(o,dots){const d=new Date(otime(o)||Date.now());const a=pad2(d.getDate())+"/"+pad2(d.getMonth()+1)+"/"+d.getFullYear();return dots?a+" "+pad2(d.getHours())+"."+pad2(d.getMinutes())+"."+pad2(d.getSeconds()):a}
+const eu=(n,m)=>{n=+n||0;if(m=="c")return n.toFixed(2).replace(".",",")+" €";if(m=="t")return String(+n.toFixed(2))+"€";return n.toFixed(2)+"€"};
+function invNo(o){if(o.pv)return S.invSeq;if(!o.inv){o.inv=S.invSeq++;persist()}return o.inv}
+function cinfo(o){return o.cd||CU.find(c=>c.name==o.cl)||{name:o.cl}}
+function mergeL(L){const m={},ord=[];(L||[]).forEach(l=>{const k=[l.id,l.pr,l.n,l.cat].join("|");if(!m[k]){m[k]={id:l.id||"",n:l.n,cat:l.cat||"",pr:l.pr,q:0,amt:0};ord.push(k)}m[k].q+=l.q;m[k].amt+=l.amt});return ord.map(k=>m[k])}
+const ldesc=l=>{const n=l.n||"",c=l.cat||"";return c?((n&&n!=l.id&&n.toLowerCase()!=c.toLowerCase())?n+" "+c:c):n};
+function chunk(rows,last,mid){const out=[];let r=rows.slice();while(r.length>last){out.push(r.splice(0,Math.min(mid,r.length-1)))}out.push(r);return out}
+function cbox(cu,fa){
+  const tel=[cu.pre,cu.tel].filter(Boolean).join(" "),ad=[cu.addr,[cu.zip,cu.city].filter(Boolean).join(" "),CNAME[cu.country]||""].filter(Boolean);
+  const ln=ad.map(x=>`<div>${esc(x)}</div>`).join("");
+  if(fa)return `<div class="nm">${esc(cu.company||cu.name)}</div>${ln}<div>N°NIF/CIF:${esc(cu.vat||cu.tax||"")}</div><div>Tel: ${esc(tel)}</div><div>Email: ${esc(cu.mail||"")}</div>`;
+  return `<div class="nm">${esc(cu.name)}</div>${cu.company&&cu.company!=cu.name?`<div>${esc(cu.company)}</div>`:""}${ln}${tel?`<div>Tel: ${esc(tel)}</div>`:""}`;
 }
+function fixedDoc(o,t){
+  const fa=t=="发票",co=S.co||{},cu=cinfo(o),rows=mergeL(o.L),pages=chunk(rows,24,30),N=pages.length,m=fa?"c":"d";
+  const sub0=o.sub!=null?o.sub:o.a,adj=o.adj||0,base=sub0+adj,ship=o.ship?(+o.ship.fee||0):0,vatv=o.vat||0;
+  const pay=(o.pay||[]).map(p=>p[0]).join("+"),pcs=o.u;
+  const title=fa?"FACTURA":(o.doc=="报价单"?"Presupuesto":o.doc=="退货单"?"Albaran devolución":"Albaran");
+  let disc="";
+  if(adj){const v2=o.adjP?(+o.adjP).toFixed(2)+"%":(o.adjA?eu(o.adjA,m):eu(adj,m));disc=`<b>${eu(sub0,m)}</b><i>${v2}</i>`}
+  const cells=[["Modo de pago",`<b style="font-size:10.5pt">${esc(pay)}</b>`],["Descuento",disc||"<b></b>"],["Total sin IVA",`<b>${eu(base,m)}</b>`],[o.tax?"IVA 21.0%":"IVA0%",`<b>${eu(vatv,m)}</b>`]];
+  if(fa)cells.push(["R.E 0.0%",`<b>${eu(0,m)}</b>`]);
+  cells.push(["TOTAL",`<b>${eu(o.a,m)}</b>`]);
+  const tstr=(ship||!fa)?eu(ship,m):"";
+  const tr=r=>`<tr><td class="c1">${esc(r.id)}</td><td class="c2">${esc(ldesc(r))}</td><td class="c3">${r.q} × 1</td><td class="c4">${fa?r.q:`<b>${r.q}</b>`}</td><td class="c5">${eu(r.pr,m)}</td><td class="c6">${fa?eu(r.amt,m):eu(r.amt,"t")}</td></tr>`;
+  const thead=`<thead><tr><th class="c1">REFERENCIA</th><th class="c2">DESCRIPCIÓN</th><th class="c3">CANTIDAD</th><th class="c4">C.TOTAL</th><th class="c5">PRECIO</th><th class="c6">TOTAL</th></tr></thead>`;
+  const note=esc(o.note||"");
+  return pages.map((pg,i)=>{
+    const last=i==N-1;
+    const head=fa?
+      `<div class="hd"><div class="hl1"><b class="nm0">${esc(co.name||"")}</b>${[co.addr1,co.addr2,co.country].filter(Boolean).map(x=>`<div>${esc(x)}</div>`).join("")}<div>Tel: ${esc(co.tel||"")}</div><div>Email: ${esc(co.email||"")}</div><div>N°NIF/CIF: ${esc(co.nif||"")}</div><div>IBAN: ${esc(co.iban||"")}</div><div class="lb">Observación:</div><div class="bx" style="height:25mm">${note}</div></div><div style="width:46%"><div class="tt1">${title}</div><div class="dt1">Fecha:&nbsp;&nbsp;&nbsp;&nbsp;${dstr(o)}</div><div class="no1">No. ${invNo(o)}</div><div class="cb" style="width:100%;margin-top:3mm">${cbox(cu,1)}</div></div></div>`:
+      `<div class="tt1">${title}</div><div class="dt1">Fecha:${dstr(o,1)}</div><div class="hd" style="margin-top:6mm"><div class="hl1"><div class="lb" style="margin-top:10mm">Remark:</div><div class="bx" style="height:25mm">${note}</div></div><div class="cb" style="height:36mm">${cbox(cu,0)}</div></div>`;
+    const foot=last?`<div class="ft"><div class="fg" style="grid-template-columns:${fa?"1.1fr .9fr 1fr 1.2fr 1fr .9fr 1.15fr":"1.1fr .95fr 1.05fr 1.2fr 1fr 1.3fr"}"><div class="f1">C.: ${pcs}${fa?" pz":" / "+pcs}</div><div class="f2">T.: ${tstr}</div>${cells.map(([l,v],j)=>`<div class="fc ${j==cells.length-1?"tot":""}"><span>${l}</span>${v}</div>`).join("")}</div><div class="eb"></div></div>`:"";
+    return `<div class="a4">${head}<table class="it">${thead}<tbody>${pg.map(tr).join("")}</tbody></table>${foot}<div class="pgn">${fa?"<span></span>":`<span>Vendedor: ${esc(co.seller||"")}</span>`}<span>Página ${i+1} / ${N}</span></div></div>`;
+  }).join("");
+}
+function pickDoc(o,t){
+  const co=S.co||{},cu=cinfo(o),note=esc(o.note||"");
+  if(t=="配货单"){
+    const rows=o.L||[],pages=chunk(rows,28,32),N=pages.length;
+    return pages.map((pg,i)=>`<div class="a4"><div class="tt1" style="font-size:24pt">Preparación</div><div class="dt1">Fecha:${dstr(o,1)}</div><div class="hd" style="margin-top:6mm"><div class="hl1"><div class="lb" style="margin-top:6mm">Pedido: #${o.no}</div><div class="bx" style="height:20mm">${note}</div></div><div class="cb" style="height:30mm">${cbox(cu,0)}</div></div><table class="it"><thead><tr><th style="width:20%">REFERENCIA</th><th style="width:30%">DESCRIPCIÓN</th><th style="width:20%">COLOR</th><th class="c4" style="width:15%">CANTIDAD</th><th class="c4" style="width:15%">✓</th></tr></thead><tbody>${pg.map(l=>`<tr><td>${esc(l.id||"")}</td><td>${esc(ldesc(l))}</td><td>${esc(l.c||"")}</td><td class="c4"><b>${l.q}</b></td><td class="c4">☐</td></tr>`).join("")}</tbody></table>${i==N-1?`<div class="tot2">Total: ${o.u} pz</div>`:""}<div class="pgn"><span>Vendedor: ${esc(co.seller||"")}</span><span>Página ${i+1} / ${N}</span></div></div>`).join("");
+  }
+  const tel=[cu.pre,cu.tel].filter(Boolean).join(" "),ad=[cu.addr,[cu.zip,cu.city].filter(Boolean).join(" "),CNAME[cu.country]||""].filter(Boolean).join(", ");
+  return `<div class="a4"><div class="tt1" style="font-size:24pt">Hoja de ruta</div><div class="dt1">Fecha:${dstr(o,1)}</div><div class="cb" style="width:100%;margin-top:8mm;font-size:14pt;line-height:1.6"><div class="nm" style="font-size:18pt">${esc(cu.company||cu.name)}</div><div>${esc(ad)||"&nbsp;"}</div><div>Tel: ${esc(tel)}</div></div><div style="margin-top:8mm"><div class="kv"><span>Pedido</span><b>#${o.no}</b></div><div class="kv"><span>Piezas</span><b>${o.u} pz</b></div><div class="kv"><span>Transporte</span><b>${o.ship?esc(o.ship.m):""}</b></div><div class="kv"><span>Observaciones</span><b>${note}</b></div></div><div class="sg">Firma del cliente:</div><div class="pgn"><span>Vendedor: ${esc(co.seller||"")}</span><span>Página 1 / 1</span></div></div>`;
+}
+function docBody(o,t){return (t=="订单"||t=="发票")?fixedDoc(o,t):pickDoc(o,t)}
+function docWrap(o,t){const z=Math.min(1,(Math.min(innerWidth,560)-16)/793.7);return `<div class="docp" style="--z:${z.toFixed(3)}">${docBody(o,t)}</div>`}
 function docText(o,t){
   const L=o.L||[],noP=(t=="路单"||t=="配货单");
   return [t+" #"+o.no,(o.dt||o.d),"客户："+(o.cl=="Client tmp"?"散客":o.cl),""].concat(L.map(l=>(l.id?l.id+" ":"")+l.n+" "+(l.cat?l.cat+" ":"")+l.c+" x"+l.q+(noP?"":" = "+mny(l.amt)))).concat(["","共 "+o.u+" 件"+(noP?"":"，合计 "+mny(o.a))]).join("\n");
 }
 function docOpen(no,t){
   const o=S.orders.find(x=>x.no==no);if(!o)return;
-  $("pg2").innerHTML=`<div class="pg"><div class="top noprint" style="padding:0 8px"><button class="ico" style="color:var(--ink)" aria-label="返回" onclick="$('pg2').innerHTML=''">${BACK}</button><div style="flex:1;text-align:center;font-size:19px">${t} #${o.no}</div><button class="go" style="background:#4a6cf7;padding:12px 18px" onclick="doPrint()">打印</button></div><div class="fb"><div class="docp">${docBody(o,t)}</div><div class="noprint" style="display:flex;gap:10px;padding:0 12px 8px"><button class="ob" style="font-size:17px;padding:12px" onclick="shareDoc(${o.no},'${t}')">分享</button><button class="ob" style="font-size:17px;padding:12px" onclick="copyDoc(${o.no},'${t}')">复制文字</button></div><div class="noprint" style="padding:4px 16px 24px;color:var(--mute);font-size:13px">如果点“打印”没有反应，可以用“分享”发到打印 App，或用手机浏览器菜单里的“打印 / 保存为 PDF”。</div></div></div>`;
+  $("pg2").innerHTML=`<div class="pg"><div class="top noprint" style="padding:0 8px"><button class="ico" style="color:var(--ink)" aria-label="返回" onclick="$('pg2').innerHTML=''">${BACK}</button><div style="flex:1;text-align:center;font-size:19px">${t} #${o.no}</div><button class="go" style="background:#4a6cf7;padding:12px 18px" onclick="doPrint()">打印</button></div><div class="fb">${docWrap(o,t)}<div class="noprint" style="display:flex;gap:10px;padding:0 12px 8px"><button class="ob" style="font-size:17px;padding:12px" onclick="shareDoc(${o.no},'${t}')">分享</button><button class="ob" style="font-size:17px;padding:12px" onclick="copyDoc(${o.no},'${t}')">复制文字</button></div><div class="noprint" style="padding:4px 16px 24px;color:var(--mute);font-size:13px">如果点“打印”没有反应，可以用“分享”发到打印 App，或用手机浏览器菜单里的“打印 / 保存为 PDF”。</div></div></div>`;
 }
 function doPrint(){try{window.print()}catch(e){toast("此环境无法直接打印，请用分享或浏览器菜单")}}
 function copyDoc(no,t){
@@ -766,7 +858,7 @@ function importData(inp){
   r.readAsText(f);
 }
 var KEY="kaidanbao_v1";
-function persist(){try{localStorage.setItem(KEY,JSON.stringify({PR:PR.map(p=>{const q={...p};delete q.photo;return q}),CU,orders:S.orders,seq:S.seq,client:S.client,cart:S.cart,lo:S.lo,CATS,X:{adjP:S.adjP,adjA:S.adjA,ship:S.ship,rnd:S.rnd,note:S.note,tag:S.tag,shm:S.shm,hr:S.hr,hdoc:S.hdoc,hv:S.hv}}))}catch(e){if(!window._pw){window._pw=1;toast("存储空间已满，新数据可能没保存")}}}
+function persist(){try{localStorage.setItem(KEY,JSON.stringify({PR:PR.map(p=>{const q={...p};delete q.photo;return q}),CU,orders:S.orders,seq:S.seq,client:S.client,cart:S.cart,lo:S.lo,CATS,X:{adjP:S.adjP,adjA:S.adjA,ship:S.ship,rnd:S.rnd,note:S.note,tag:S.tag,shm:S.shm,hr:S.hr,hdoc:S.hdoc,hv:S.hv,co:S.co,invSeq:S.invSeq}}))}catch(e){if(!window._pw){window._pw=1;toast("存储空间已满，新数据可能没保存")}}}
 function resetAll(){sheet("清除所有商品、客户、订单和库存数据？",'<button class="opt" style="color:var(--red)" onclick="try{localStorage.removeItem(KEY)}catch(e){}try{indexedDB.deleteDatabase(\'kdb_photos\')}catch(e){}setTimeout(()=>location.reload(),300)">确认清除</button>')}
 try{const d=JSON.parse(localStorage.getItem(KEY)||"null");if(d){if(d.PR){PR.splice(0,PR.length,...d.PR);PR.forEach(p=>{if(p.photo)phSave(p.id,p.photo)})}if(d.CU)CU.splice(0,CU.length,...d.CU);S.orders=d.orders||[];S.seq=d.seq||S.seq;if(d.client)S.client=d.client;if(d.cart)S.cart=d.cart;if(d.lo)S.lo=d.lo;if(d.CATS)CATS=d.CATS;if(d.X)Object.assign(S,d.X)}}catch(e){}
 render();phLoad();
